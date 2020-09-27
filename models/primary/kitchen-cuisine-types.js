@@ -1,0 +1,28 @@
+"use strict";
+
+module.exports = (sequelize, Sequelize) => {
+  const tableName = "KitchenCuisineTypes";
+
+  const tableDefintion = {
+    id: {
+      primaryKey: true,
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
+      unique: true,
+    },
+  };
+
+  const table = sequelize.define(tableName, tableDefintion, {
+    underscored: true,
+  });
+
+  table.associate = (models) => {
+    models.Kitchens.hasMany(table);
+    table.belongsTo(models.Kitchens);
+
+    models.CuisineTypes.hasMany(table);
+    table.belongsTo(models.CuisineTypes);
+  };
+
+  return table;
+};
