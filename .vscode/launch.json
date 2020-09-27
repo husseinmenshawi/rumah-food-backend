@@ -1,0 +1,32 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.1.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program - DEV - PORT 3000",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/index.js",
+      "env": {
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program - DEV - PORT 3000 - Seed & Setup",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/index.js",
+      "env": {
+        "PRIMARY_DB_SYNC_ENABLED": "1",
+        "PRIMARY_DB_MASTER_DATA_ROLE_SEED_ENABLED": "1",
+        "PRIMARY_DB_MASTER_DATA_ROLE_SEED_OVERWRITE_ENABLED": "1",
+        "PRIMARY_DB_MASTER_DATA_CUISINE_TYPE_SEED_ENABLED": "1",
+        "PRIMARY_DB_MASTER_DATA_CUISINE_TYPE_SEED_OVERWRITE_ENABLED": "1",
+        "PRIMARY_DB_SUPER_USER_SEED_ENABLED": "1",
+      }
+    },
+  ]
+}
