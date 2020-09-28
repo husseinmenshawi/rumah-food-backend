@@ -135,6 +135,10 @@ const isInteger = (input) => {
   return requiredInteger().isValidSync(input);
 };
 
+const isUUID = (input) => {
+  return requiredUUID().isValidSync(input);
+};
+
 const dateStringFormat = () => {
   //Matches YYYY-MM-DD
   return Yup.string()
@@ -161,6 +165,10 @@ const requiredInteger = () => {
   return Yup.number().required().integer().min(1);
 };
 
+const requiredUUID = () => {
+  return Yup.string().required().min(36).max(36).trim().strict();
+};
+
 const optionalInteger = () => {
   return Yup.number().notRequired().integer().min(1);
 };
@@ -171,10 +179,6 @@ const requiredString = () => {
 
 const optionalString = () => {
   return Yup.string().trim().min(1).notRequired();
-};
-
-const requiredUUID = () => {
-  return Yup.string().required().min(36).max(36).trim().strict();
 };
 
 const string = () => {
@@ -226,4 +230,5 @@ module.exports = {
   isFindUsersObject,
   isCreateItemObject,
   isFindItemsObject,
+  isUUID,
 };

@@ -102,6 +102,41 @@ const paths = (tags = ["Kitchen"]) => {
         },
       },
     },
+    [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen/item/{id}`]: {
+      delete: {
+        tags,
+        description: "Endpoint to delete item.",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        operationId: "deleteItem",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            minLength: 1,
+            required: true,
+            description: `Item id.`,
+            type: "string",
+            format: "uuid",
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful item deletion.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen/item/me`]: {
       get: {
         tags,

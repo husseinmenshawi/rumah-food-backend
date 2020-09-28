@@ -61,4 +61,23 @@ module.exports = class DbPrimaryUserRepository extends BaseClass {
     const dbResult = await super.PrimaryDbModels.KitchenItems.findAll(options);
     return super.handleArrayObjectReturn({ dbResult, returnAsJson });
   }
+
+  async FindOneById({ id, returnAsJson = true }) {
+    const query = {
+      where: { id },
+    };
+    const dbResult = await super.PrimaryDbModels.KitchenItems.findOne(query);
+    return super.handleSingObjectReturn({ dbResult, returnAsJson });
+  }
+
+  async DeleteOneById({ id }) {
+    const query = {
+      where: {},
+    };
+
+    if (id) {
+      query.where.id = id;
+    }
+    return await super.PrimaryDbModels.KitchenItems.destroy(query);
+  }
 };

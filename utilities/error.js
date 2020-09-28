@@ -162,6 +162,20 @@ const FindItemsParamsInvalidError = () => {
   });
 };
 
+const ItemIdInvalidError = () => {
+  return GenerateHttpError({
+    message: "Item id is invalid.",
+    httpErrorCode: 400,
+  });
+};
+
+const ItemNotFoundError = () => {
+  return GenerateHttpError({
+    message: "Item does not exist in database.",
+    httpErrorCode: 404,
+  });
+};
+
 module.exports = {
   GenerateHttpError,
   ConvertErrorToHttpError,
@@ -185,4 +199,6 @@ module.exports = {
   ItemMetadataInvalidError,
   KitchenDoesNotExistError,
   FindItemsParamsInvalidError,
+  ItemIdInvalidError,
+  ItemNotFoundError,
 };

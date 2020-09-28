@@ -49,4 +49,21 @@ module.exports = class KitchenService extends BaseClass {
       kitchenId,
     });
   }
+
+  async DeleteItem({ id }) {
+    if (!this.ValidationUtil.isUUID(id)) {
+      throw super.ErrorUtil.ItemIdInvalidError();
+    }
+
+    const itemExist = await super.KitchenRepo.FindOneById({
+      id,
+    });
+
+    if (!itemExist) {
+      throw super.ErrorUtil.ItemNotFoundError();
+    }
+
+    await super.KitchenRepo.DeleteOneById({ id });
+    return;
+  }
 };

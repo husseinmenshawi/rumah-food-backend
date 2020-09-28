@@ -15,7 +15,6 @@ module.exports = class UserService extends BaseClass {
 
   async Create({ payload }) {
     if (!this.ValidationUtil.isCreateUserObject(payload)) {
-      console.log("User metadata invalid");
       throw this.ErrorUtil.UserMetadataInvalidError();
     }
     const { email, name, password, phoneNumber, roleId, kitchenName } = payload;

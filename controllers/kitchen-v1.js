@@ -51,6 +51,27 @@ router.post(
   }
 );
 
+router.delete(
+  "/item/:id",
+  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  middlewares.jtwTokenValidator.validate,
+  middlewares.authorization.authorizeRole([
+    constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+  ]),
+  async (req, res, next) => {
+    const { params } = req;
+    const { id } = params;
+    try {
+      await new Services.Kitchen().DeleteItem({
+        id,
+      });
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 // router.patch(
 //   "/me",
 //   middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
