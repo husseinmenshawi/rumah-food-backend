@@ -51,6 +51,28 @@ router.post(
   }
 );
 
+router.get(
+  "/item/:id",
+  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  middlewares.jtwTokenValidator.validate,
+  middlewares.authorization.authorizeRole([
+    constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+  ]),
+  async (req, res, next) => {
+    const { params } = req;
+    const { id } = params;
+    try {
+      const dbResult = await new Services.Kitchen().FindItemById({
+        id,
+      });
+      res.status(200);
+      res.json(dbResult);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.delete(
   "/item/:id",
   middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
@@ -72,21 +94,24 @@ router.delete(
   }
 );
 
-// router.patch(
-//   "/me",
-//   middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
-//   middlewares.jtwTokenValidator.validate,
-//   async (req, res, next) => {
-//     const { body, user } = req;
-//     try {
-//       await new Services.User().UpdateMyUserDetails({
-//         payload: body,
-//         currentUser: user,
-//       });
-//       res.status(200);
-//       res.json({ message: "User Updated Successfully!" });
-//     } catch (error) {
-//       next(error);
-//     }
-//   }
-// );
+router.patch(
+  "/item/:id",
+  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  middlewares.jtwTokenValidator.validate,
+  middlewares.authorization.authorizeRole([
+    constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+  ]),
+  async (req, res, next) => {
+    const { body, params } = req;
+    const { id } = params;
+    try {
+      await new Services.Kitchen().UpdateItem({
+        payload: body,
+        id,
+      });
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+);

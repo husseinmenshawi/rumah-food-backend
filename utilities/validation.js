@@ -127,6 +127,18 @@ const isFindItemsObject = (input) => {
     .isValidSync(input);
 };
 
+const isUpdateItemObject = (input) => {
+  return Yup.object()
+    .shape({
+      itemName: requiredString(),
+      itemPrice: requiredInteger(),
+      itemDesc: requiredString(),
+      isEnabled: requiredBoolean(),
+    })
+    .required()
+    .isValidSync(input);
+};
+
 const isString = (input) => {
   return requiredString().isValidSync(input);
 };
@@ -231,4 +243,5 @@ module.exports = {
   isCreateItemObject,
   isFindItemsObject,
   isUUID,
+  isUpdateItemObject,
 };

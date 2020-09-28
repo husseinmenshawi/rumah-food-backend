@@ -62,7 +62,7 @@ module.exports = class DbPrimaryUserRepository extends BaseClass {
     return super.handleArrayObjectReturn({ dbResult, returnAsJson });
   }
 
-  async FindOneById({ id, returnAsJson = true }) {
+  async FindItemById({ id, returnAsJson = true }) {
     const query = {
       where: { id },
     };
@@ -70,14 +70,19 @@ module.exports = class DbPrimaryUserRepository extends BaseClass {
     return super.handleSingObjectReturn({ dbResult, returnAsJson });
   }
 
-  async DeleteOneById({ id }) {
+  async DeleteItemById({ id }) {
     const query = {
-      where: {},
+      where: { id },
     };
 
-    if (id) {
-      query.where.id = id;
-    }
     return await super.PrimaryDbModels.KitchenItems.destroy(query);
+  }
+
+  async UpdateItemById({ payload, id }) {
+    const query = {
+      where: { id },
+    };
+
+    return await super.PrimaryDbModels.KitchenItems.update(payload, query);
   }
 };

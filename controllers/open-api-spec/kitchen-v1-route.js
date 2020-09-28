@@ -103,6 +103,39 @@ const paths = (tags = ["Kitchen"]) => {
       },
     },
     [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen/item/{id}`]: {
+      get: {
+        tags,
+        description: "Endpoint to get item by id.",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        operationId: "findItemById",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            minLength: 1,
+            required: true,
+            description: `Item id`,
+            type: "string",
+            format: "uuid",
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful items fetch.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
       delete: {
         tags,
         description: "Endpoint to delete item.",
@@ -126,6 +159,49 @@ const paths = (tags = ["Kitchen"]) => {
         responses: {
           200: {
             description: "Successful item deletion.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
+      patch: {
+        tags,
+        description: "Endpoint to update item by id.",
+        requestBody: {
+          description: "Payload to edit item details.",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/UpdateMyItemDetails",
+              },
+            },
+          },
+        },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        operationId: "findItemById",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            minLength: 1,
+            required: true,
+            description: `Item id`,
+            type: "string",
+            format: "uuid",
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful items fetch.",
             content: {
               "application/json": {
                 schema: {
@@ -202,39 +278,6 @@ const paths = (tags = ["Kitchen"]) => {
           },
         },
       },
-
-      patch: {
-        tags,
-        description: "Endpoint to edit item details.",
-        requestBody: {
-          description: "Payload to edit item details.",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/UpdateMyItemDetails",
-              },
-            },
-          },
-        },
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        operationId: "updateItem",
-        responses: {
-          200: {
-            description: "Successful item update.",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                },
-              },
-            },
-          },
-        },
-      },
     },
   };
 };
@@ -278,36 +321,29 @@ const schemas = {
   UpdateMyItemDetails: {
     type: "object",
     properties: {
-      email: {
-        $ref: "#/components/schemas/username",
-      },
-      password: {
-        $ref: "#/components/schemas/password",
-      },
-      firstName: {
+      itemName: {
         type: "string",
-        description: "User's first name.",
-        required: false,
+        description: "Item's name.",
+        required: true,
+        example: "Cupcake",
       },
-      lastName: {
-        type: "string",
-        description: "User's last name.",
-        required: false,
-      },
-      roles: {
-        type: "array",
-        description: "List of roles. This is the role id which is an integer.",
-        required: false,
-        items: {
-          type: "integer",
-        },
-        example: [CONSTANTS.USER_ROLES.ROLE_ENUMS.BUYER.id],
-      },
-      storeId: {
+      itemPrice: {
         type: "integer",
-        description: "Store id the user belongs to.",
-        required: false,
-        example: 1,
+        description: "Item's price",
+        required: true,
+        example: "15",
+      },
+      itemDesc: {
+        type: "string",
+        description: "Item's description",
+        required: true,
+        example: "Choclate baked cake",
+      },
+      isEnabled: {
+        type: "boolean",
+        description: "Item activity",
+        required: true,
+        example: true,
       },
     },
   },

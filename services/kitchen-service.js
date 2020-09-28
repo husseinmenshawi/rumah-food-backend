@@ -50,12 +50,22 @@ module.exports = class KitchenService extends BaseClass {
     });
   }
 
+  async FindItemById({ id }) {
+    if (!this.ValidationUtil.isUUID(id)) {
+      throw super.ErrorUtil.ItemIdInvalidError();
+    }
+
+    return await super.KitchenRepo.FindItemById({
+      id,
+    });
+  }
+
   async DeleteItem({ id }) {
     if (!this.ValidationUtil.isUUID(id)) {
       throw super.ErrorUtil.ItemIdInvalidError();
     }
 
-    const itemExist = await super.KitchenRepo.FindOneById({
+    const itemExist = await super.KitchenRepo.FindItemById({
       id,
     });
 
@@ -63,7 +73,30 @@ module.exports = class KitchenService extends BaseClass {
       throw super.ErrorUtil.ItemNotFoundError();
     }
 
-    await super.KitchenRepo.DeleteOneById({ id });
+    await super.KitchenRepo.DeleteItemById({ id });
     return;
+  }
+
+  async UpdateItem({ payload, id }) {
+    if (!this.ValidationUtil.isUUID(id)) {
+      throw super.ErrorUtil.ItemIdInvalidError();
+    }
+    if (Object.keys(payload).length === 0) {
+      throw super.ErrorUtil.EmptyPayloadError();
+    }
+
+    if (!this.ValidationUtil.isUpdateItemObject(payload)) {
+      throw super.ErrorUtil.ItemMetadataInvalidError();
+    }
+
+    const itemExist = await super.KitchenRepo.FindItemById({
+      id,
+    });
+
+    if (!itemExist) {
+      throw super.ErrorUtil.ItemNotFoundError();
+    }
+
+    await super.KitchenRepo.UpdateItemById({ payload, id });
   }
 };
