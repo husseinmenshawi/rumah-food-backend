@@ -55,7 +55,7 @@ router.patch(
         payload: body,
         currentUser: user,
       });
-      res.status(200);
+      res.status(204);
       res.json({ message: "User Updated Successfully!" });
     } catch (error) {
       next(error);

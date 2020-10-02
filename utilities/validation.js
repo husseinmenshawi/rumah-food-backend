@@ -36,13 +36,12 @@ const isCreateUserObject = (input) => {
 const isUpdateUserObject = (input) => {
   return Yup.object()
     .shape({
+      name: optionalString(),
       email: optionalEmail(),
-      firstName: optionalString(),
-      lastName: optionalString(),
-      password: optionalPassword(),
-      enabled: optionalBoolean(),
-      roles: optionalNumberArray(),
-      storeId: optionalInteger(),
+      phoneNumber: optionalString(),
+      addressLine1: optionalString(),
+      addressLine2: optionalString(),
+      addressLine3: optionalString(),
     })
     .required()
     .isValidSync(input);

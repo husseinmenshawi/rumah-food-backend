@@ -277,9 +277,14 @@ module.exports = class UserService extends BaseClass {
     }
 
     const id = currentUser.userId;
-    const { password, roles, email, firstName, lastName, storeId } = payload;
-    const userBeforeUpdate = await this.FindUserById({ id });
-    const roleIds = userBeforeUpdate.Roles.map((x) => x.id);
+    const {
+      name,
+      email,
+      phoneNumber,
+      addressLine1,
+      addressLine2,
+      addressLine3,
+    } = payload;
 
     if (!this.ValidationUtil.isUpdateUserObject(payload)) {
       throw this.ErrorUtil.UserMetadataInvalidError();
@@ -287,7 +292,7 @@ module.exports = class UserService extends BaseClass {
 
     if (email) {
       const emailExist = await super.UserRepo.FindUserByParams({
-        username: email,
+        email,
         not_id: id,
       });
       if (emailExist) {
@@ -295,49 +300,14 @@ module.exports = class UserService extends BaseClass {
       }
     }
 
-    if (roles) {
-      if (!roleIds.includes(constants.USER_ROLES.ROLE_ENUMS.SUPER_USER.id)) {
-        throw super.ErrorUtil.UnauthorizedError();
-      }
-      await super.UserRepo.DeleteUserRolesByUserId({ userId: id });
-      await Promise.all(
-        roles.map(async (roleId) => {
-          await super.UserRepo.CreateUserRole({
-            payload: {
-              userId: id,
-              roleId,
-            },
-          });
-        })
-      );
-    }
-
-    if (password) {
-      const hashedPassword = await super.CryptoUtil.Bcrypt.hashPassword({
-        password,
-      });
-      await super.UserRepo.UpdateUserCredentialByUserId({
-        payload: { password: hashedPassword },
-        userId: id,
-      });
-    }
-
     const userMetadata = {
+      name,
       email,
-      firstName,
-      lastName,
+      phoneNumber,
+      addressLine1,
+      addressLine2,
+      addressLine3,
     };
-
-    if (email) {
-      userMetadata.username = email;
-    }
-
-    if (
-      roleIds.includes(constants.USER_ROLES.ROLE_ENUMS.SUPER_USER.id) &&
-      storeId
-    ) {
-      userMetadata.storeId = storeId;
-    }
 
     if (Object.keys(userMetadata).length !== 0) {
       await super.UserRepo.UpdateUserById({ payload: userMetadata, id });
@@ -382,7 +352,7 @@ module.exports = class UserService extends BaseClass {
 
     if (email) {
       const emailExist = await super.UserRepo.FindUserByParams({
-        username: email,
+        email,
         not_id: id,
       });
       if (emailExist) {
