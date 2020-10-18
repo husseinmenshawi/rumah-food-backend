@@ -16,6 +16,13 @@ module.exports = class DbPrimaryUserRepository extends BaseClass {
     return super.handleSingObjectReturn({ dbResult, returnAsJson });
   }
 
+  async CreateKitchenItemFlavour({ payload, returnAsJson = true }) {
+    const dbResult = await super.PrimaryDbModels.KitchenItemFlavours.create(
+      payload
+    );
+    return super.handleSingObjectReturn({ dbResult, returnAsJson });
+  }
+
   async FindKitchenById({ id, returnAsJson = true }) {
     const options = {
       where: {
@@ -62,10 +69,16 @@ module.exports = class DbPrimaryUserRepository extends BaseClass {
     return super.handleArrayObjectReturn({ dbResult, returnAsJson });
   }
 
-  async FindItemById({ id, returnAsJson = true }) {
+  async FindItemById({ id, returnAsJson = true, includeFlavours = true }) {
     const query = {
       where: { id },
+      include: [],
     };
+    if (includeFlavours) {
+      query.include.push({
+        model: super.PrimaryDbModels.Flavours,
+      });
+    }
     const dbResult = await super.PrimaryDbModels.KitchenItems.findOne(query);
     return super.handleSingObjectReturn({ dbResult, returnAsJson });
   }

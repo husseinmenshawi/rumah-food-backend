@@ -19,14 +19,31 @@ module.exports = class KitchenService extends BaseClass {
       throw super.ErrorUtil.ItemMetadataInvalidError();
     }
     const { kitchenId } = payload;
+    const { flavours } = payload;
+    delete payload.flavours;
     const kitchenExist = await super.KitchenRepo.FindKitchenById({
       id: kitchenId,
     });
+
     if (!kitchenExist) {
       throw super.ErrorUtil.KitchenDoesNotExistError();
     }
 
-    return await super.KitchenRepo.CreateItem({ payload });
+    const kitchenItem = await super.KitchenRepo.CreateItem({ payload });
+    const kitchenItemId = kitchenItem.id;
+
+    await Promise.all(
+      flavours.map((flavourId) =>
+        super.KitchenRepo.CreateKitchenItemFlavour({
+          payload: {
+            flavourId,
+            kitchenItemId,
+          },
+        })
+      )
+    );
+
+    return kitchenItem;
   }
 
   async FindItems({ params }) {

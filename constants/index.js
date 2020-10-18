@@ -10,4 +10,5 @@ module.exports = {
   },
   USER_ROLES: require('./user-roles'),
   CUISINE_TYPES: require('./cuisine-types'),
+  FLAVOURS: require('./flavours')
 };

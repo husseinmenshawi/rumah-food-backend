@@ -107,6 +107,7 @@ const isCreateItemObject = (input) => {
       itemPrice: requiredInteger(),
       itemDesc: requiredString(),
       isEnabled: requiredBoolean(),
+      flavours: numberArray(),
       kitchenId: requiredInteger(),
     })
     .required()

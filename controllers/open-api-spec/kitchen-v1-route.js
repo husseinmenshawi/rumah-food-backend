@@ -310,6 +310,20 @@ const schemas = {
         required: true,
         example: true,
       },
+      flavours: {
+        type: 'array',
+        description: 'List of flavours. This is the flavour id which is an integer.',
+        required: true,
+        items: {
+          type: 'integer',
+          enum: [
+            CONSTANTS.FLAVOURS.DB_FLAVOUR.map((x) => {
+              return x.id;
+            }),
+          ],
+        },
+        example: [CONSTANTS.FLAVOURS.FLAVOUR_ENUMS.VANILLA.id],
+      },
       kitchenId: {
         type: "integer",
         description: "kitchen id of the user",

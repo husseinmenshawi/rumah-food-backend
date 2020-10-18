@@ -137,20 +137,20 @@ const schemas = {
     type: "string",
     description: "Email of the user.",
     required: true,
-    example: "menshawi98@gmail.com",
+    example: "menshawi@gmail.com",
   },
   password: {
     type: "string",
     minimum: 8,
     description: "User's password. Minimum length 8 characters.",
     required: true,
-    example: "Test123!",
+    example: "12345678",
   },
   roleId: {
     type: "integer",
     description: "Role id of the user",
     required: true,
-    example: constants.USER_ROLES.ROLE_ENUMS.SUPER_USER.id,
+    example: constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
   },
   LoginCredentials: {
     type: "object",

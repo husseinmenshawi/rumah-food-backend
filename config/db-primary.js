@@ -48,6 +48,14 @@ const dbConfig = {
     fieldName: "PRIMARY_DB_MASTER_DATA_CUISINE_TYPE_SEED_OVERWRITE_ENABLED",
     defaultValue: false,
   }),
+  dbMasterDataFlavourSeedEnabled: EnvVariable.getEnVarAsBoolean({
+    fieldName: "PRIMARY_DB_MASTER_DATA_FLAVOUR_SEED_ENABLED",
+    defaultValue: false,
+  }),
+  dbMasterDataFlavourSeedOverwriteEnabled: EnvVariable.getEnVarAsBoolean({
+    fieldName: "PRIMARY_DB_MASTER_DATA_FLAVOUR_SEED_OVERWRITE_ENABLED",
+    defaultValue: false,
+  }),
   dbDefaultSuperUser: {
     seedEnabled: EnvVariable.getEnVarAsBoolean({
       defaultValue: false,

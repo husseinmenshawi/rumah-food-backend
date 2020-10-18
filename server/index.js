@@ -124,6 +124,59 @@ async function seedCuisineTypeMasterData(){
 
 }
 
+async function seedFlavourMasterData(){
+  if (!config.db.primary.dbMasterDataFlavourSeedEnabled) {
+    return;
+  }
+
+  const flavours = constants.FLAVOURS.DB_FLAVOUR;
+  const promises = flavours.map((flavour) => {
+    const { id } = flavour;
+
+    return primaryDb.sequelizeInstance.models.Flavours.findOrCreate({
+      where: {
+        id,
+      },
+      defaults: { ...flavour },
+    });
+  });
+  const dbResults = await Promise.all(promises);
+
+  if (!config.db.primary.dbMasterDataFlavourSeedOverwriteEnabled) {
+    return;
+  }
+
+  const existingEntries = flow(
+    map((x) => {
+      return {
+        row: x[0],
+        created: x[1],
+      };
+    }),
+    filter((x) => x.created == false)
+  )(dbResults);
+
+  if (!existingEntries || existingEntries.length < 1) {
+    return;
+  }
+
+  const updatePromises = existingEntries.map((x) => {
+    const { row } = x;
+    const { id } = row;
+    const baseEntry = flavours.find((x) => x.id == id);
+    Object.keys(baseEntry).forEach((key) => {
+      if (key !== "id") {
+        row[key] = baseEntry[key];
+      }
+    });
+
+    return row.save();
+  });
+
+  await Promise.all(updatePromises);
+
+}
+
 async function seedSuperUserData() {
   if (!config.db.primary.dbDefaultSuperUser.seedEnabled) {
     return;
@@ -246,6 +299,7 @@ async function setupPrimaryDb() {
   await seedRoleMasterData();
   await seedCuisineTypeMasterData();
   await seedSuperUserData();
+  await seedFlavourMasterData();
   // await seedOrderTypesData();
 }
 
