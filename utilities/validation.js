@@ -134,6 +134,7 @@ const isUpdateItemObject = (input) => {
       itemPrice: requiredInteger(),
       itemDesc: requiredString(),
       isEnabled: requiredBoolean(),
+      flavours: numberArray(),
     })
     .required()
     .isValidSync(input);

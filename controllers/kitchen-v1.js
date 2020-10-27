@@ -115,3 +115,21 @@ router.patch(
     }
   }
 );
+
+router.get(
+  "/flavours/",
+  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  middlewares.jtwTokenValidator.validate,
+  middlewares.authorization.authorizeRole([
+    constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+  ]),
+  async (req, res, next) => {
+    try {
+      const dbResult = await new Services.Kitchen().FindFlavours();
+      res.status(200);
+      res.json(dbResult);
+    } catch (error) {
+      next(error);
+    }
+  }
+);

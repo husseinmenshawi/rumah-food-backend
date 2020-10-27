@@ -90,6 +90,7 @@ module.exports = class KitchenService extends BaseClass {
       throw super.ErrorUtil.ItemNotFoundError();
     }
 
+    await super.KitchenRepo.DeleteItemFlavoursByItemId({ id });
     await super.KitchenRepo.DeleteItemById({ id });
     return;
   }
@@ -105,7 +106,8 @@ module.exports = class KitchenService extends BaseClass {
     if (!this.ValidationUtil.isUpdateItemObject(payload)) {
       throw super.ErrorUtil.ItemMetadataInvalidError();
     }
-
+    const { flavours } = payload;
+    delete payload.flavours;
     const itemExist = await super.KitchenRepo.FindItemById({
       id,
     });
@@ -113,7 +115,21 @@ module.exports = class KitchenService extends BaseClass {
     if (!itemExist) {
       throw super.ErrorUtil.ItemNotFoundError();
     }
-
+    await super.KitchenRepo.DeleteItemFlavoursByItemId({ id });
+    await Promise.all(
+      flavours.map((flavourId) =>
+        super.KitchenRepo.CreateKitchenItemFlavour({
+          payload: {
+            flavourId,
+            kitchenItemId: id,
+          },
+        })
+      )
+    );
     await super.KitchenRepo.UpdateItemById({ payload, id });
+  }
+
+  async FindFlavours() {
+    return await super.KitchenRepo.FindFlavours();
   }
 };

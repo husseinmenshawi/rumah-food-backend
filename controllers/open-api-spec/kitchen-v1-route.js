@@ -279,6 +279,30 @@ const paths = (tags = ["Kitchen"]) => {
         },
       },
     },
+    [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen/flavours`]: {
+      get: {
+        tags,
+        description: "Endpoint to get flavours.",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        operationId: "findMyItems",
+        responses: {
+          200: {
+            description: "Successful flavours fetch.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   };
 };
 
@@ -311,11 +335,12 @@ const schemas = {
         example: true,
       },
       flavours: {
-        type: 'array',
-        description: 'List of flavours. This is the flavour id which is an integer.',
+        type: "array",
+        description:
+          "List of flavours. This is the flavour id which is an integer.",
         required: true,
         items: {
-          type: 'integer',
+          type: "integer",
           enum: [
             CONSTANTS.FLAVOURS.DB_FLAVOUR.map((x) => {
               return x.id;
@@ -358,6 +383,21 @@ const schemas = {
         description: "Item activity",
         required: true,
         example: true,
+      },
+      flavours: {
+        type: "array",
+        description:
+          "List of flavours. This is the flavour id which is an integer.",
+        required: true,
+        items: {
+          type: "integer",
+          enum: [
+            CONSTANTS.FLAVOURS.DB_FLAVOUR.map((x) => {
+              return x.id;
+            }),
+          ],
+        },
+        example: [CONSTANTS.FLAVOURS.FLAVOUR_ENUMS.VANILLA.id],
       },
     },
   },

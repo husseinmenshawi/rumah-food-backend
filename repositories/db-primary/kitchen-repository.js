@@ -98,4 +98,16 @@ module.exports = class DbPrimaryUserRepository extends BaseClass {
 
     return await super.PrimaryDbModels.KitchenItems.update(payload, query);
   }
+
+  async DeleteItemFlavoursByItemId({ id }) {
+    const query = {
+      where: { kitchen_item_id: id },
+    };
+
+    return await super.PrimaryDbModels.KitchenItemFlavours.destroy(query);
+  }
+
+  async FindFlavours() {
+    return await super.PrimaryDbModels.Flavours.findAll({});
+  }
 };
