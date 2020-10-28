@@ -140,6 +140,20 @@ const isUpdateItemObject = (input) => {
     .isValidSync(input);
 };
 
+const isCreateCapacityObject = (input) => {
+  return Yup.object()
+    .shape({
+      startDateTime: dateStringFormat(),
+      endDateTime: dateStringFormat(),
+      kitchenItemId: requiredUUID(),
+      amount: requiredInteger(),
+      // orderDateTime: requiredDate(),
+      // userId: requiredInteger(),
+    })
+    .required()
+    .isValidSync(input);
+};
+
 const isString = (input) => {
   return requiredString().isValidSync(input);
 };
@@ -230,6 +244,10 @@ const optionalBoolean = () => {
   return Yup.bool().notRequired();
 };
 
+const requiredDate = () => {
+  return Yup.date().required();
+};
+
 module.exports = {
   isNumberArray,
   isUserObject,
@@ -245,4 +263,5 @@ module.exports = {
   isFindItemsObject,
   isUUID,
   isUpdateItemObject,
+  isCreateCapacityObject,
 };

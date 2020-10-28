@@ -110,4 +110,8 @@ module.exports = class DbPrimaryUserRepository extends BaseClass {
   async FindFlavours() {
     return await super.PrimaryDbModels.Flavours.findAll({});
   }
+
+  async CreateCapacity({ payload }) {
+    return await super.PrimaryDbModels.KitchenItemCapacities.create(payload);
+  }
 };

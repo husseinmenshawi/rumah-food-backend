@@ -303,6 +303,40 @@ const paths = (tags = ["Kitchen"]) => {
         },
       },
     },
+    [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen/capacity`]: {
+      post: {
+        tags,
+        description: "Endpoint to create capacity.",
+        requestBody: {
+          description: "Payload to create capacity.",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/CreateCapacity",
+              },
+            },
+          },
+        },
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        operationId: "createCapacity",
+        responses: {
+          200: {
+            description: "Successful capacity creation.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   };
 };
 
@@ -398,6 +432,36 @@ const schemas = {
           ],
         },
         example: [CONSTANTS.FLAVOURS.FLAVOUR_ENUMS.VANILLA.id],
+      },
+    },
+  },
+  CreateCapacity: {
+    type: "object",
+    properties: {
+      startDateTime: {
+        type: "string",
+        description: "Start date of capacity.",
+        required: true,
+        example: "2020-10-28",
+      },
+      endDateTime: {
+        type: "string",
+        description: "End date of capacity.",
+        required: true,
+        example: "2020-10-28",
+      },
+      kitchenItemId: {
+        //uuid
+        type: "string",
+        description: "Kitchen item id.",
+        required: true,
+        example: '1b762adb-7652-42b7-b61c-85c57078629f',
+      },
+      amount: {
+        type: "integer",
+        description: "Amount of capacities to add.",
+        required: true,
+        example: 1,
       },
     },
   },

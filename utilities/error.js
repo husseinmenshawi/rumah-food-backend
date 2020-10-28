@@ -176,6 +176,13 @@ const ItemNotFoundError = () => {
   });
 };
 
+const CapacityMetadataInvalidError = () => {
+  return GenerateHttpError({
+    message: "Capacity metadata is invalid.",
+    httpErrorCode: 400,
+  });
+};
+
 module.exports = {
   GenerateHttpError,
   ConvertErrorToHttpError,
@@ -201,4 +208,5 @@ module.exports = {
   FindItemsParamsInvalidError,
   ItemIdInvalidError,
   ItemNotFoundError,
+  CapacityMetadataInvalidError
 };

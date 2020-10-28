@@ -82,7 +82,7 @@ module.exports = class KitchenService extends BaseClass {
       throw super.ErrorUtil.ItemIdInvalidError();
     }
 
-    const itemExist = await super.KitchenRepo.FindItemById({
+    const itemExist = await this.FindItemById({
       id,
     });
 
@@ -108,7 +108,7 @@ module.exports = class KitchenService extends BaseClass {
     }
     const { flavours } = payload;
     delete payload.flavours;
-    const itemExist = await super.KitchenRepo.FindItemById({
+    const itemExist = await this.FindItemById({
       id,
     });
 
@@ -131,5 +131,27 @@ module.exports = class KitchenService extends BaseClass {
 
   async FindFlavours() {
     return await super.KitchenRepo.FindFlavours();
+  }
+
+  async CreateCapacity({ payload }) {
+    if (!this.ValidationUtil.isCreateCapacityObject(payload)) {
+      throw super.ErrorUtil.CapacityMetadataInvalidError();
+    }
+
+    const { kitchenItemId, amount } = payload;
+    delete payload.amount;
+    const itemExist = await this.FindItemById({
+      id: kitchenItemId,
+    });
+
+    if (!itemExist) {
+      throw super.ErrorUtil.ItemNotFoundError();
+    }
+    let promises = [];
+    for (let i = 0; i < amount; i++) {
+      promises.push(super.KitchenRepo.CreateCapacity({ payload }));
+    }
+    // await super.KitchenRepo.CreateCapacity({payload});
+    await Promise.all(promises);
   }
 };

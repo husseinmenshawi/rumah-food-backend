@@ -133,3 +133,24 @@ router.get(
     }
   }
 );
+
+router.post(
+  "/capacity",
+  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  middlewares.jtwTokenValidator.validate,
+  middlewares.authorization.authorizeRole([
+    constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+  ]),
+  async (req, res, next) => {
+    const { body } = req;
+    try {
+      const createdEntry = await new Services.Kitchen().CreateCapacity({
+        payload: body,
+      });
+      res.status(201);
+      res.json(createdEntry);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
