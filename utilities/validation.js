@@ -127,6 +127,17 @@ const isFindItemsObject = (input) => {
     .isValidSync(input);
 };
 
+const isFindCapacitiesObject = (input) => {
+  return Yup.object()
+    .shape({
+      pageSize: optionalInteger(),
+      pageNumber: Yup.number().notRequired().integer().min(0),
+      kitchenId: requiredInteger(),
+    })
+    .required()
+    .isValidSync(input);
+};
+
 const isUpdateItemObject = (input) => {
   return Yup.object()
     .shape({
@@ -145,6 +156,7 @@ const isCreateCapacityObject = (input) => {
     .shape({
       startDateTime: dateStringFormat(),
       endDateTime: dateStringFormat(),
+      kitchenId: requiredInteger(),
       kitchenItemId: requiredUUID(),
       amount: requiredInteger(),
       // orderDateTime: requiredDate(),
@@ -264,4 +276,5 @@ module.exports = {
   isUUID,
   isUpdateItemObject,
   isCreateCapacityObject,
+  isFindCapacitiesObject
 };

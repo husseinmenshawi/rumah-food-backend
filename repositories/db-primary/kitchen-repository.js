@@ -114,4 +114,36 @@ module.exports = class DbPrimaryUserRepository extends BaseClass {
   async CreateCapacity({ payload }) {
     return await super.PrimaryDbModels.KitchenItemCapacities.create(payload);
   }
+
+  async FindCapacities({
+    // pageNumber = 0,
+    // pageSize = 10,
+    kitchenId,
+    includeItem = true,
+    returnAsJson = true,
+  }) {
+    const options = {
+      where: {
+        [Op.and]: [],
+      },
+      include: [],
+      // offset: pageNumber * pageSize,
+      // limit: pageSize,
+      order: [["created_at", "DESC"]],
+    };
+
+    if (kitchenId) {
+      options.where[Op.and].push({ kitchenId });
+    }
+    if (includeItem) {
+      options.include.push({
+        model: super.PrimaryDbModels.KitchenItems,
+      });
+    }
+
+    const dbResult = await super.PrimaryDbModels.KitchenItemCapacities.findAll(
+      options
+    );
+    return super.handleArrayObjectReturn({ dbResult, returnAsJson });
+  }
 };

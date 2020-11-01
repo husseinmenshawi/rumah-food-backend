@@ -32,6 +32,9 @@ module.exports = (sequelize, Sequelize) => {
     models.KitchenItems.hasMany(table);
     table.belongsTo(models.KitchenItems, { foreignKey: "kitchenItemId" });
 
+    models.Kitchens.hasMany(table);
+    table.belongsTo(models.Kitchens, { foreignKey: "kitchenId" });
+
     models.Users.hasMany(table);
     table.belongsTo(models.Users);
   };

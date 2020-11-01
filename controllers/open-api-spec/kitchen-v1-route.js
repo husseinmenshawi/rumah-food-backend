@@ -337,6 +337,56 @@ const paths = (tags = ["Kitchen"]) => {
         },
       },
     },
+    [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen/capacities/me`]: {
+      get: {
+        tags,
+        description: "Endpoint to get my capacities.",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        operationId: "findMycapacities",
+        parameters: [
+          {
+            in: "query",
+            name: "pageNumber",
+            minLength: 1,
+            required: false,
+            description: `The page number.`,
+            type: "string",
+          },
+          {
+            in: "query",
+            name: "pageSize",
+            minLength: 1,
+            required: false,
+            description: `The page size.`,
+            type: "string",
+          },
+          {
+            in: "query",
+            name: "kitchenId",
+            minLength: 1,
+            required: false,
+            description: `The kitchen id.`,
+            type: "integer",
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful capacities fetch.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   };
 };
 
@@ -450,12 +500,18 @@ const schemas = {
         required: true,
         example: "2020-10-28",
       },
+      kitchenId: {
+        type: "integer",
+        description: "kitchen id of the user",
+        required: true,
+        example: 10002,
+      },
       kitchenItemId: {
         //uuid
         type: "string",
         description: "Kitchen item id.",
         required: true,
-        example: '1b762adb-7652-42b7-b61c-85c57078629f',
+        example: "1b762adb-7652-42b7-b61c-85c57078629f",
       },
       amount: {
         type: "integer",

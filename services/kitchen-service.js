@@ -138,8 +138,15 @@ module.exports = class KitchenService extends BaseClass {
       throw super.ErrorUtil.CapacityMetadataInvalidError();
     }
 
-    const { kitchenItemId, amount } = payload;
+    const { kitchenId, kitchenItemId, amount } = payload;
     delete payload.amount;
+
+    const kitchenExist = await super.KitchenRepo.FindKitchenById({
+      id: kitchenId,
+    });
+    if (!kitchenExist) {
+      throw super.ErrorUtil.KitchenDoesNotExistError();
+    }
     const itemExist = await this.FindItemById({
       id: kitchenItemId,
     });
@@ -153,5 +160,25 @@ module.exports = class KitchenService extends BaseClass {
     }
     // await super.KitchenRepo.CreateCapacity({payload});
     await Promise.all(promises);
+  }
+
+  async FindCapacities({ params }) {
+    if (!this.ValidationUtil.isFindCapacitiesObject(params)) {
+      throw super.ErrorUtil.FindCapacitiesParamsInvalidError();
+    }
+
+    const { pageNumber, pageSize, kitchenId } = params;
+    const kitchenExist = await super.KitchenRepo.FindKitchenById({
+      id: kitchenId,
+    });
+    if (!kitchenExist) {
+      throw super.ErrorUtil.KitchenDoesNotExistError();
+    }
+
+    return await super.KitchenRepo.FindCapacities({
+      pageNumber,
+      pageSize,
+      kitchenId,
+    });
   }
 };
