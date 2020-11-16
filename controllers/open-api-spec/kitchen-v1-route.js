@@ -5,77 +5,23 @@ const CONSTANTS = require("../../constants");
 const paths = (tags = ["Kitchen"]) => {
   return {
     [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen/item`]: {
-      get: {
-        tags,
-        description: "Endpoint to get items.",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
-        operationId: "findAllItems",
-        parameters: [
-          {
-            in: "query",
-            name: "keyword",
-            minLength: 1,
-            required: false,
-            description: `Keyword to search for item.`,
-            type: "string",
-          },
-          {
-            in: "query",
-            name: "pageNumber",
-            minLength: 1,
-            required: false,
-            description: `The page number.`,
-            type: "string",
-          },
-          {
-            in: "query",
-            name: "pageSize",
-            minLength: 1,
-            required: false,
-            description: `The page size.`,
-            type: "string",
-          },
-          {
-            in: "query",
-            name: "kitchenId",
-            minLength: 1,
-            required: false,
-            description: `The kitchen id.`,
-            type: "integer",
-          },
-          // {
-          //   in: 'query',
-          //   name: 'showInactive',
-          //   minLength: 1,
-          //   required: false,
-          //   description: `Show Inactive Kitchens.`,
-          //   type: 'string',
-          // },
-        ],
-        responses: {
-          200: {
-            description: "Successful items fetch.",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                },
-              },
-            },
-          },
-        },
-      },
       post: {
         tags,
         description: "Endpoint to create item.",
+        // consumes: "multipart/form-data",
+        // parameters: [
+        //   {
+        //     in: "formData",
+        //     name: "image",
+        //     type: "file",
+        //     description: `Item image`,
+        //     required: false,
+        //   },
+        // ],
         requestBody: {
           description: "Payload to create new item.",
           content: {
-            "application/json": {
+            "multipart/form-data": {
               schema: {
                 $ref: "#/components/schemas/CreateItem",
               },
@@ -425,19 +371,24 @@ const schemas = {
         required: true,
         items: {
           type: "integer",
-          enum: [
-            CONSTANTS.FLAVOURS.DB_FLAVOUR.map((x) => {
-              return x.id;
-            }),
-          ],
+          // enum: [
+          //   CONSTANTS.FLAVOURS.DB_FLAVOUR.map((x) => {
+          //     return x.id;
+          //   }),
+          // ],
         },
-        example: [CONSTANTS.FLAVOURS.FLAVOUR_ENUMS.VANILLA.id],
+        // example: [CONSTANTS.FLAVOURS.FLAVOUR_ENUMS.VANILLA.id],
       },
       kitchenId: {
         type: "integer",
         description: "kitchen id of the user",
         required: true,
-        example: 10002,
+        example: 1,
+      },
+      file: {
+        type: "file",
+        description: "image of the item",
+        required: true,
       },
     },
   },
@@ -504,7 +455,7 @@ const schemas = {
         type: "integer",
         description: "kitchen id of the user",
         required: true,
-        example: 10002,
+        example: 1,
       },
       kitchenItemId: {
         //uuid

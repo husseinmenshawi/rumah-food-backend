@@ -27,6 +27,18 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       defaultValue: true,
     },
+    fileBuffer: {
+      type: Sequelize.BLOB,
+      allowNull: true,
+    },
+    fileMimeType: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    fileUri: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
   };
 
   const table = sequelize.define(tableName, tableDefintion, {

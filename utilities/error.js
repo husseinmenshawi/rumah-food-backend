@@ -190,6 +190,20 @@ const FindCapacitiesParamsInvalidError = () => {
   });
 };
 
+const InvalidFileType = () => {
+  return GenerateHttpError({
+    message: "Invalid file type",
+    httpErrorCode: 400,
+  });
+};
+
+const InvalidFileSize = () => {
+  return GenerateHttpError({
+    message: "Invalid file size",
+    httpErrorCode: 400,
+  });
+};
+
 module.exports = {
   GenerateHttpError,
   ConvertErrorToHttpError,
@@ -216,5 +230,7 @@ module.exports = {
   ItemIdInvalidError,
   ItemNotFoundError,
   CapacityMetadataInvalidError,
-  FindCapacitiesParamsInvalidError
+  FindCapacitiesParamsInvalidError,
+  InvalidFileType,
+  InvalidFileSize,
 };

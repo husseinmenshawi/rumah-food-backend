@@ -71,7 +71,7 @@ async function seedRoleMasterData() {
   await Promise.all(updatePromises);
 }
 
-async function seedCuisineTypeMasterData(){
+async function seedCuisineTypeMasterData() {
   if (!config.db.primary.dbMasterDataCuisineTypeSeedEnabled) {
     return;
   }
@@ -121,10 +121,9 @@ async function seedCuisineTypeMasterData(){
   });
 
   await Promise.all(updatePromises);
-
 }
 
-async function seedFlavourMasterData(){
+async function seedFlavourMasterData() {
   if (!config.db.primary.dbMasterDataFlavourSeedEnabled) {
     return;
   }
@@ -174,22 +173,39 @@ async function seedFlavourMasterData(){
   });
 
   await Promise.all(updatePromises);
-
 }
 
-async function seedSuperUserData() {
-  if (!config.db.primary.dbDefaultSuperUser.seedEnabled) {
+async function seedInitialSellerData() {
+  if (!config.db.primary.dbDefaultSellerUser.seedEnabled) {
     return;
   }
 
-  const email = config.db.primary.dbDefaultSuperUser.email;
+  const email = config.db.primary.dbDefaultSellerUser.email;
+
+  const kitchenMetadata = {
+    name: "Default Seller Kitchen",
+    email,
+  };
+  const kitchenCreatedResult = await primaryDb.sequelizeInstance.models.Kitchens.findOrCreate(
+    {
+      where: {
+        email
+      },
+      defaults: {
+        ...kitchenMetadata,
+      },
+    }
+  );
+
+  const kitchenRow = kitchenCreatedResult[0].toJSON();
 
   const superUser = {
-    name: "Hussein Admin",
+    name: "Hussein Seller",
     email,
     phoneNumber: "0176291725",
     addressLine1: "H7-3-2 Menara Polo",
-    roleId: 1,
+    roleId: 2,
+    kitchenId: kitchenRow.id,
   };
 
   const userCreationResult = await primaryDb.sequelizeInstance.models.Users.findOrCreate(
@@ -209,7 +225,7 @@ async function seedSuperUserData() {
   };
 
   const hashedPassword = await Utilities.Bcrypt.hashPassword({
-    password: config.db.primary.dbDefaultSuperUser.password,
+    password: config.db.primary.dbDefaultSellerUser.password,
   });
   const { id: userId } = dbSuperUser.row;
   const createPasswordEntryPromise = primaryDb.sequelizeInstance.models.UserCredentials.findOrCreate(
@@ -222,20 +238,6 @@ async function seedSuperUserData() {
       },
     }
   );
-
-  // const { id: roleId } = constants.USER_ROLES.ROLE_ENUMS.SUPER_USER;
-  // const roleCreationPromise = primaryDb.sequelizeInstance.models.UserRoles.findOrCreate(
-  //   {
-  //     where: {
-  //       userId,
-  //       roleId,
-  //     },
-  //     defaults: {
-  //       userId,
-  //       roleId,
-  //     },
-  //   }
-  // );
 
   await Promise.all([createPasswordEntryPromise]);
 }
@@ -298,7 +300,7 @@ async function setupPrimaryDb() {
 
   await seedRoleMasterData();
   await seedCuisineTypeMasterData();
-  await seedSuperUserData();
+  await seedInitialSellerData();
   await seedFlavourMasterData();
   // await seedOrderTypesData();
 }

@@ -1,12 +1,8 @@
 "use strict";
 
-const moment = require("moment");
-const jwt = require("jsonwebtoken");
-const uuid = require("uuid");
-const constants = require("../constants");
-
 const BaseClass = require("./_base-service");
 
+const maxSize = 5000000;
 module.exports = class KitchenService extends BaseClass {
   constructor() {
     super();
@@ -14,13 +10,21 @@ module.exports = class KitchenService extends BaseClass {
   }
 
   async CreateItem({ payload }) {
+    const { fileMimeType } = payload;
+
     if (!this.ValidationUtil.isCreateItemObject(payload)) {
       console.log("Item metadata invalid");
       throw super.ErrorUtil.ItemMetadataInvalidError();
     }
+    if (fileMimeType != "png" && fileMimeType != "jpg") {
+      throw super.ErrorUtil.InvalidFileType();
+    }
+
+    // if (file && file.size > maxSize) {
+    //   throw super.ErrorUtil.InvalidFileSize();
+    // }
     const { kitchenId } = payload;
     const { flavours } = payload;
-    delete payload.flavours;
     const kitchenExist = await super.KitchenRepo.FindKitchenById({
       id: kitchenId,
     });

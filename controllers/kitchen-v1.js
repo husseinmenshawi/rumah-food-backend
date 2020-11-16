@@ -1,10 +1,17 @@
 const express = require("express");
 const router = express.Router();
 
+const upload_library = require("multer");
+const upload_storage = upload_library.memoryStorage();
+const upload = upload_library({
+  storage: upload_storage,
+});
+
 const constants = require("../constants");
 const Services = require("../services");
 const middlewares = require("../middlewares");
 
+//url: /http:/localhost:3000/api/v1.0/kitchen/...)
 module.exports = (app) => {
   app.use(`${constants.API.VERSIONS["V1.0"].BASE_PATH}/kitchen`, router);
 };
@@ -32,17 +39,20 @@ router.get(
 
 router.post(
   "/item",
+  upload.single("file"),
   middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
   middlewares.jtwTokenValidator.validate,
   middlewares.authorization.authorizeRole([
     constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
   ]),
   async (req, res, next) => {
-    const { body } = req;
+    const { body, file } = req;
     try {
       const createdEntry = await new Services.Kitchen().CreateItem({
         payload: body,
+        // file
       });
+      delete createdEntry.fileBuffer;
       res.status(201);
       res.json(createdEntry);
     } catch (error) {
@@ -111,7 +121,8 @@ router.patch(
       });
       res.status(204).send();
     } catch (error) {
-      next(error);
+      //next(error);
+      res.status(error.httpErrorCode).send();
     }
   }
 );

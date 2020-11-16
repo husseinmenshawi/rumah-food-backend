@@ -107,8 +107,10 @@ const isCreateItemObject = (input) => {
       itemPrice: requiredInteger(),
       itemDesc: requiredString(),
       isEnabled: requiredBoolean(),
-      flavours: numberArray(),
+      // flavours: numberArray(),
       kitchenId: requiredInteger(),
+      fileUri: requiredString(),
+      fileMimeType: requiredString(),
     })
     .required()
     .isValidSync(input);
@@ -146,6 +148,8 @@ const isUpdateItemObject = (input) => {
       itemDesc: requiredString(),
       isEnabled: requiredBoolean(),
       flavours: numberArray(),
+      fileUri: requiredString(),
+      fileMimeType: requiredString(),
     })
     .required()
     .isValidSync(input);
@@ -276,5 +280,5 @@ module.exports = {
   isUUID,
   isUpdateItemObject,
   isCreateCapacityObject,
-  isFindCapacitiesObject
+  isFindCapacitiesObject,
 };

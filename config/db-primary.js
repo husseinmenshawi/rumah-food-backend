@@ -56,18 +56,18 @@ const dbConfig = {
     fieldName: "PRIMARY_DB_MASTER_DATA_FLAVOUR_SEED_OVERWRITE_ENABLED",
     defaultValue: false,
   }),
-  dbDefaultSuperUser: {
+  dbDefaultSellerUser: {
     seedEnabled: EnvVariable.getEnVarAsBoolean({
       defaultValue: false,
-      fieldName: "PRIMARY_DB_SUPER_USER_SEED_ENABLED",
+      fieldName: "PRIMARY_DB_SELLER_USER_SEED_ENABLED",
     }),
     email: EnvVariable.getEnvVariableAsString({
-      defaultValue: "menshawi98@gmail.com",
-      fieldName: "PRIMARY_DB_SUPER_USER_SEED_EMAIL",
+      defaultValue: "menshawi@gmail.com",
+      fieldName: "PRIMARY_DB_SELLER_USER_SEED_EMAIL",
     }),
     password: EnvVariable.getEnvVariableAsString({
-      defaultValue: "Test123!",
-      fieldName: "PRIMARY_DB_SUPER_USER_SEED_PASSWORD",
+      defaultValue: "12345678",
+      fieldName: "PRIMARY_DB_SELLER_USER_SEED_PASSWORD",
     }),
   },
   // dbMasterDataOrderTypesSeedEnabled: EnvVariable.getEnVarAsBoolean({
