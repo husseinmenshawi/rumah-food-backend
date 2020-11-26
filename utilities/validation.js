@@ -170,6 +170,20 @@ const isCreateCapacityObject = (input) => {
     .isValidSync(input);
 };
 
+const isCreateOrderObject = (input) => {
+  return Yup.object()
+    .shape({
+      orderDateTime: dateStringFormat(),
+      endDateTime: dateStringFormat(),
+      userId: requiredInteger(),
+      kitchenItemId: requiredUUID(),
+      amount: requiredInteger(),
+      comment: optionalString(),
+    })
+    .required()
+    .isValidSync(input);
+};
+
 const isString = (input) => {
   return requiredString().isValidSync(input);
 };
@@ -281,4 +295,5 @@ module.exports = {
   isUpdateItemObject,
   isCreateCapacityObject,
   isFindCapacitiesObject,
+  isCreateOrderObject,
 };

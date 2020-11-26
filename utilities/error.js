@@ -204,6 +204,34 @@ const InvalidFileSize = () => {
   });
 };
 
+const OrderMetadataInvalidError = () => {
+  return GenerateHttpError({
+    message: "Order metadata is invalid",
+    httpErrorCode: 400,
+  });
+};
+
+const InsufficientCapacitiesError = () => {
+  return GenerateHttpError({
+    message: "Insufficient Capacities",
+    httpErrorCode: 410,
+  });
+};
+
+const OrderIdInvalidError = () => {
+  return GenerateHttpError({
+    message: "Order id is invalid",
+    httpErrorCode: 400,
+  });
+};
+
+const FlavourNotAvailableError = () => {
+  return GenerateHttpError({
+    message: "The flavour you selected is not available for this item",
+    httpErrorCode: 400,
+  });
+};
+
 module.exports = {
   GenerateHttpError,
   ConvertErrorToHttpError,
@@ -233,4 +261,8 @@ module.exports = {
   FindCapacitiesParamsInvalidError,
   InvalidFileType,
   InvalidFileSize,
+  OrderMetadataInvalidError,
+  InsufficientCapacitiesError,
+  OrderIdInvalidError,
+  FlavourNotAvailableError,
 };

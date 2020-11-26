@@ -38,4 +38,8 @@ module.exports = class BaseService {
   get KitchenRepo() {
     return new this.Repositories.Db.Primary.Kitchen();
   }
+
+  get OrderRepo() {
+    return new this.Repositories.Db.Primary.Order();
+  }
 };

@@ -189,7 +189,7 @@ async function seedInitialSellerData() {
   const kitchenCreatedResult = await primaryDb.sequelizeInstance.models.Kitchens.findOrCreate(
     {
       where: {
-        email
+        email,
       },
       defaults: {
         ...kitchenMetadata,
@@ -242,56 +242,124 @@ async function seedInitialSellerData() {
   await Promise.all([createPasswordEntryPromise]);
 }
 
-// async function seedOrderTypesData() {
-//   if (!config.db.primary.dbMasterDataOrderTypesSeedEnabled) {
-//     return;
-//   }
+async function seedInitialBuyerData() {
+  if (!config.db.primary.dbDefaultBuyerUser.seedEnabled) {
+    return;
+  }
 
-//   const orderTypes = constants.ORDER_TYPES.DB_ORDER_TYPES;
-//   const promises = orderTypes.map((type) => {
-//     const { id } = type;
+  const email = config.db.primary.dbDefaultBuyerUser.email;
 
-//     return primaryDb.sequelizeInstance.models.OrderTypes.findOrCreate({
-//       where: {
-//         id,
-//       },
-//       defaults: { ...type },
-//     });
-//   });
-//   const dbResults = await Promise.all(promises);
+  const kitchenMetadata = {
+    name: "Default Buyer Kitchen",
+    email,
+  };
+  const kitchenCreatedResult = await primaryDb.sequelizeInstance.models.Kitchens.findOrCreate(
+    {
+      where: {
+        email,
+      },
+      defaults: {
+        ...kitchenMetadata,
+      },
+    }
+  );
 
-//   if (!config.db.primary.dbMasterDataOrderTypesSeedOverwriteEnabled) {
-//     return;
-//   }
+  const kitchenRow = kitchenCreatedResult[0].toJSON();
 
-//   const existingEntries = flow(
-//     map((x) => {
-//       return {
-//         row: x[0],
-//         created: x[1],
-//       };
-//     }),
-//     filter((x) => x.created == false)
-//   )(dbResults);
+  const superUser = {
+    name: "Hussein Buyer",
+    email,
+    phoneNumber: "0176291725",
+    addressLine1: "H7-3-2 Menara Polo",
+    roleId: 3,
+    kitchenId: kitchenRow.id,
+  };
 
-//   if (!existingEntries || existingEntries.length < 1) {
-//     return;
-//   }
-//   const updatePromises = existingEntries.map((x) => {
-//     const { row } = x;
-//     const { id } = row;
-//     const baseEntry = orderTypes.find((x) => x.id == id);
-//     Object.keys(baseEntry).forEach((key) => {
-//       if (key !== "id") {
-//         row[key] = baseEntry[key];
-//       }
-//     });
+  const userCreationResult = await primaryDb.sequelizeInstance.models.Users.findOrCreate(
+    {
+      where: {
+        email: superUser.email,
+      },
+      defaults: {
+        ...superUser,
+      },
+    }
+  );
 
-//     return row.save();
-//   });
+  const dbSuperUser = {
+    row: userCreationResult[0].toJSON(),
+    created: userCreationResult[1],
+  };
 
-//   await Promise.all(updatePromises);
-// }
+  const hashedPassword = await Utilities.Bcrypt.hashPassword({
+    password: config.db.primary.dbDefaultBuyerUser.password,
+  });
+  const { id: userId } = dbSuperUser.row;
+  const createPasswordEntryPromise = primaryDb.sequelizeInstance.models.UserCredentials.findOrCreate(
+    {
+      where: {
+        userId,
+      },
+      defaults: {
+        password: hashedPassword,
+      },
+    }
+  );
+
+  await Promise.all([createPasswordEntryPromise]);
+}
+
+async function seedOrderStatusesMasterData() {
+  if (!config.db.primary.dbMasterDataOrderStatusesSeedEnabled) {
+    return;
+  }
+
+  const statuses = constants.ORDER_STATUSES.DB_STATUSES;
+  const promises = statuses.map((status) => {
+    const { id } = status;
+
+    return primaryDb.sequelizeInstance.models.OrderStatuses.findOrCreate({
+      where: {
+        id,
+      },
+      defaults: { ...status },
+    });
+  });
+  const dbResults = await Promise.all(promises);
+
+  if (!config.db.primary.dbMasterDataOrderStatusesSeedOverwriteEnabled) {
+    return;
+  }
+
+  const existingEntries = flow(
+    map((x) => {
+      return {
+        row: x[0],
+        created: x[1],
+      };
+    }),
+    filter((x) => x.created == false)
+  )(dbResults);
+
+  if (!existingEntries || existingEntries.length < 1) {
+    return;
+  }
+
+  const updatePromises = existingEntries.map((x) => {
+    const { row } = x;
+    const { id } = row;
+    const baseEntry = statuses.find((x) => x.id == id);
+    Object.keys(baseEntry).forEach((key) => {
+      if (key !== "id") {
+        row[key] = baseEntry[key];
+      }
+    });
+
+    return row.save();
+  });
+
+  await Promise.all(updatePromises);
+}
 
 async function setupPrimaryDb() {
   if (config.db.primary.dbSyncEnabled) {
@@ -302,7 +370,8 @@ async function setupPrimaryDb() {
   await seedCuisineTypeMasterData();
   await seedInitialSellerData();
   await seedFlavourMasterData();
-  // await seedOrderTypesData();
+  await seedInitialBuyerData();
+  await seedOrderStatusesMasterData();
 }
 
 module.exports = () => {

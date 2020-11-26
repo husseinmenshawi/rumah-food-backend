@@ -70,14 +70,28 @@ const dbConfig = {
       fieldName: "PRIMARY_DB_SELLER_USER_SEED_PASSWORD",
     }),
   },
-  // dbMasterDataOrderTypesSeedEnabled: EnvVariable.getEnVarAsBoolean({
-  //   fieldName: 'PRIMARY_DB_MASTER_DATA_ORDER_TYPES_SEED_ENABLED',
-  //   defaultValue: false,
-  // }),
-  // dbMasterDataOrderTypesSeedOverwriteEnabled: EnvVariable.getEnVarAsBoolean({
-  //   fieldName: 'PRIMARY_DB_MASTER_DATA_ORDER_TYPES_SEED_OVERWRITE_ENABLED',
-  //   defaultValue: false,
-  // }),
+  dbDefaultBuyerUser: {
+    seedEnabled: EnvVariable.getEnVarAsBoolean({
+      defaultValue: false,
+      fieldName: "PRIMARY_DB_BUYER_USER_SEED_ENABLED",
+    }),
+    email: EnvVariable.getEnvVariableAsString({
+      defaultValue: "hussein@gmail.com",
+      fieldName: "PRIMARY_DB_BUYER_USER_SEED_EMAIL",
+    }),
+    password: EnvVariable.getEnvVariableAsString({
+      defaultValue: "12345678",
+      fieldName: "PRIMARY_DB_BUYER_USER_SEED_PASSWORD",
+    }),
+  },
+  dbMasterDataOrderStatusesSeedEnabled: EnvVariable.getEnVarAsBoolean({
+    fieldName: "PRIMARY_DB_MASTER_DATA_ORDER_STATUSES_SEED_ENABLED",
+    defaultValue: false,
+  }),
+  dbMasterDataOrderStatusesSeedOverwriteEnabled: EnvVariable.getEnVarAsBoolean({
+    fieldName: "PRIMARY_DB_MASTER_DATA_ORDER_STATUSES_SEED_OVERWRITE_ENABLED",
+    defaultValue: false,
+  }),
 };
 
 function getDbUri() {

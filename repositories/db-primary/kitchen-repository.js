@@ -3,7 +3,9 @@
 const BaseClass = require("../_base-db-repository");
 const { Op } = require("sequelize");
 
-module.exports = class DbPrimaryUserRepository extends BaseClass {
+module.exports = class DbPrimaryKitchenRepository extends (
+  BaseClass
+) {
   async Create({ payload, returnAsJson = true }) {
     const dbResult = await super.PrimaryDbModels.Kitchens.create(payload);
     return super.handleSingObjectReturn({ dbResult, returnAsJson });
@@ -142,6 +144,53 @@ module.exports = class DbPrimaryUserRepository extends BaseClass {
     }
 
     const dbResult = await super.PrimaryDbModels.KitchenItemCapacities.findAll(
+      options
+    );
+    return super.handleArrayObjectReturn({ dbResult, returnAsJson });
+  }
+
+  async FindAvailableCapacities({ kitchenItemId, returnAsJson = true }) {
+    const options = {
+      where: {
+        [Op.and]: [{ orderDateTime: null }, { userId: null }],
+      },
+    };
+    if (kitchenItemId) {
+      options.where[Op.and].push({ kitchenItemId });
+    }
+
+    const dbResult = await super.PrimaryDbModels.KitchenItemCapacities.findAll(
+      options
+    );
+    return super.handleArrayObjectReturn({ dbResult, returnAsJson });
+  }
+
+  async reserveCapacity({ updatePayload, availableCapacityIds }) {
+    const query = {
+      where: {
+        id: {
+          [Op.in]: availableCapacityIds,
+        },
+      },
+    };
+
+    return await super.PrimaryDbModels.KitchenItemCapacities.update(
+      updatePayload,
+      query
+    );
+  }
+
+  async FindAvailableFlavoursByKitchenItemId({
+    kitchenItemId,
+    returnAsJson = true,
+  }) {
+    const options = {
+      where: {
+        kitchenItemId,
+      },
+    };
+
+    const dbResult = await super.PrimaryDbModels.KitchenItemFlavours.findAll(
       options
     );
     return super.handleArrayObjectReturn({ dbResult, returnAsJson });
