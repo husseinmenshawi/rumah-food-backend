@@ -10,14 +10,18 @@ module.exports = (sequelize, Sequelize) => {
       defaultValue: Sequelize.UUIDV4,
       unique: true,
     },
-    startDateTime: {
+    date: {
       type: Sequelize.DATE,
       allowNull: false,
     },
-    endDateTime: {
-      type: Sequelize.DATE,
-      allowNull: false,
-    },
+    // startDateTime: {
+    //   type: Sequelize.DATE,
+    //   allowNull: false,
+    // },
+    // endDateTime: {
+    //   type: Sequelize.DATE,
+    //   allowNull: false,
+    // },
     orderDateTime: {
       type: Sequelize.DATE,
       allowNull: true,

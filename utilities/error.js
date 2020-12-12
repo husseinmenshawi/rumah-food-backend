@@ -232,6 +232,13 @@ const FlavourNotAvailableError = () => {
   });
 };
 
+const KitchenIdInvalidError = () => {
+  return GenerateHttpError({
+    message: "Kitchen id is invalid.",
+    httpErrorCode: 400,
+  });
+};
+
 module.exports = {
   GenerateHttpError,
   ConvertErrorToHttpError,
@@ -265,4 +272,5 @@ module.exports = {
   InsufficientCapacitiesError,
   OrderIdInvalidError,
   FlavourNotAvailableError,
+  KitchenIdInvalidError
 };

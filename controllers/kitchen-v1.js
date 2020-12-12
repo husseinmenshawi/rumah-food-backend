@@ -17,11 +17,49 @@ module.exports = (app) => {
 };
 
 router.get(
+  "/",
+  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  middlewares.jtwTokenValidator.validate,
+  middlewares.authorization.authorizeRole([
+    constants.USER_ROLES.ROLE_ENUMS.BUYER.id,
+  ]),
+  async (req, res, next) => {
+    try {
+      const dbResult = await new Services.Kitchen().FindAll({});
+      res.status(200);
+      res.json(dbResult);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/one/:id",
+  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  middlewares.jtwTokenValidator.validate,
+  middlewares.authorization.authorizeRole([
+    constants.USER_ROLES.ROLE_ENUMS.BUYER.id,
+  ]),
+  async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const dbResult = await new Services.Kitchen().FindOneById({ id });
+      res.status(200);
+      res.json(dbResult);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
   "/item/me",
   middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
   middlewares.jtwTokenValidator.validate,
   middlewares.authorization.authorizeRole([
     constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+    constants.USER_ROLES.ROLE_ENUMS.BUYER.id,
   ]),
   async (req, res, next) => {
     const { query } = req;
@@ -128,15 +166,37 @@ router.patch(
 );
 
 router.get(
-  "/flavours/",
+  "/flavours",
+  // middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  // middlewares.jtwTokenValidator.validate,
+  // middlewares.authorization.authorizeRole([
+  //   constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+  // ]),
+  async (req, res, next) => {
+    try {
+      const dbResult = await new Services.Kitchen().FindFlavours();
+      res.status(200);
+      res.json(dbResult);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/flavours/item/:id",
   middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
   middlewares.jtwTokenValidator.validate,
   middlewares.authorization.authorizeRole([
     constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+    constants.USER_ROLES.ROLE_ENUMS.BUYER.id,
   ]),
   async (req, res, next) => {
+    const { id } = req.params;
     try {
-      const dbResult = await new Services.Kitchen().FindFlavours();
+      const dbResult = await new Services.Kitchen().FindItemFlavours({
+        kitchenItemId: id,
+      });
       res.status(200);
       res.json(dbResult);
     } catch (error) {
@@ -179,6 +239,31 @@ router.get(
       const dbResult = await new Services.Kitchen().FindCapacities({
         params: query,
       });
+      res.status(200);
+      res.json(dbResult);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/capacities/item/:id",
+  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  middlewares.jtwTokenValidator.validate,
+  middlewares.authorization.authorizeRole([
+    constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+    constants.USER_ROLES.ROLE_ENUMS.BUYER.id,
+  ]),
+  async (req, res, next) => {
+    const { params } = req;
+    const kitchenItemId = params.id;
+    try {
+      const dbResult = await new Services.Kitchen().FindCapacitiesByKitchenItemId(
+        {
+          kitchenItemId,
+        }
+      );
       res.status(200);
       res.json(dbResult);
     } catch (error) {

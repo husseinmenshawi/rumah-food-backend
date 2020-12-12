@@ -16,6 +16,10 @@ module.exports = class UserService extends (
   }
 
   async Create({ payload }) {
+    if (!payload.comment) {
+      delete payload.comment;
+    }
+
     if (!this.ValidationUtil.isCreateOrderObject(payload)) {
       throw this.ErrorUtil.OrderMetadataInvalidError();
     }
@@ -27,10 +31,6 @@ module.exports = class UserService extends (
       comment,
       flavourId,
     } = payload;
-    if (!comment) {
-      delete payload.comment;
-    }
-
     const availableFlavours = await super.KitchenRepo.FindAvailableFlavoursByKitchenItemId(
       { kitchenItemId }
     );

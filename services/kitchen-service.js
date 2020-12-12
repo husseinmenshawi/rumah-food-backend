@@ -3,10 +3,38 @@
 const BaseClass = require("./_base-service");
 
 const maxSize = 5000000;
-module.exports = class KitchenService extends BaseClass {
+module.exports = class KitchenService extends (
+  BaseClass
+) {
   constructor() {
     super();
     super.ClassBinder.bind(this, KitchenService);
+  }
+
+  async FindAll({}) {
+    const kitchens = await super.KitchenRepo.FindAll({});
+    // TODO: double check this with more load
+    await Promise.all(
+      kitchens.map(async (x) => {
+        const itemsCount = await super.KitchenRepo.FindItemsCountByKitchenId({
+          id: x.id,
+        });
+        const index = kitchens.indexOf(x);
+        kitchens[index].itemsCount = itemsCount;
+      })
+    );
+
+    return kitchens;
+  }
+
+  async FindOneById({ id }) {
+    if (!this.ValidationUtil.isInteger(id)) {
+      throw super.ErrorUtil.ItemIdInvalidError();
+    }
+
+    return await super.KitchenRepo.FindKitchenById({
+      id,
+    });
   }
 
   async CreateItem({ payload }) {
@@ -183,6 +211,42 @@ module.exports = class KitchenService extends BaseClass {
       pageNumber,
       pageSize,
       kitchenId,
+    });
+  }
+
+  async FindCapacitiesByKitchenItemId({ kitchenItemId }) {
+    if (!this.ValidationUtil.isUUID(kitchenItemId)) {
+      throw super.ErrorUtil.ItemIdInvalidError();
+    }
+
+    const itemExist = await this.FindItemById({
+      id: kitchenItemId,
+    });
+
+    if (!itemExist) {
+      throw super.ErrorUtil.ItemNotFoundError();
+    }
+
+    return await super.KitchenRepo.FindAvailableCapacities({
+      kitchenItemId,
+    });
+  }
+
+  async FindItemFlavours({kitchenItemId}){
+    if (!this.ValidationUtil.isUUID(kitchenItemId)) {
+      throw super.ErrorUtil.ItemIdInvalidError();
+    }
+
+    const itemExist = await this.FindItemById({
+      id: kitchenItemId,
+    });
+
+    if (!itemExist) {
+      throw super.ErrorUtil.ItemNotFoundError();
+    }
+
+    return await super.KitchenRepo.FindItemFlavours({
+      kitchenItemId,
     });
   }
 };

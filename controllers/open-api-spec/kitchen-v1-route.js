@@ -4,6 +4,64 @@ const CONSTANTS = require("../../constants");
 
 const paths = (tags = ["Kitchen"]) => {
   return {
+    [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen`]: {
+      get: {
+        tags,
+        description: "Endpoint to get kitchens.",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        operationId: "findKitchens",
+        responses: {
+          200: {
+            description: "Successful kitchen fetch.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen/one/{id}`]: {
+      get: {
+        tags,
+        description: "Endpoint to get kitchen.",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        operationId: "findKitchenById",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            minLength: 1,
+            required: true,
+            description: `Kitchen id`,
+            type: "integer",
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful kitchen fetch.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen/item`]: {
       post: {
         tags,
@@ -333,6 +391,40 @@ const paths = (tags = ["Kitchen"]) => {
         },
       },
     },
+    [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/kitchen/capacities/item/{id}`]: {
+      get: {
+        tags,
+        description: "Endpoint to get capacities available for a specific item.",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        operationId: "findCapacitiesByKitchenItemId",
+        parameters: [
+          {
+            in: "path",
+            name: "id",
+            minLength: 1,
+            required: true,
+            description: `Kitchen item id`,
+            type: "string",
+          },
+        ],
+        responses: {
+          200: {
+            description: "Successful capacities fetch.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   };
 };
 
@@ -439,18 +531,24 @@ const schemas = {
   CreateCapacity: {
     type: "object",
     properties: {
-      startDateTime: {
+      date: {
         type: "string",
         description: "Start date of capacity.",
         required: true,
         example: "2020-10-28",
       },
-      endDateTime: {
-        type: "string",
-        description: "End date of capacity.",
-        required: true,
-        example: "2020-10-28",
-      },
+      // startDateTime: {
+      //   type: "string",
+      //   description: "Start date of capacity.",
+      //   required: true,
+      //   example: "2020-10-28",
+      // },
+      // endDateTime: {
+      //   type: "string",
+      //   description: "End date of capacity.",
+      //   required: true,
+      //   example: "2020-10-28",
+      // },
       kitchenId: {
         type: "integer",
         description: "kitchen id of the user",

@@ -6,6 +6,10 @@ const { Op } = require("sequelize");
 module.exports = class DbPrimaryKitchenRepository extends (
   BaseClass
 ) {
+  async FindAll({ returnAsJson = true }) {
+    const dbResult = await super.PrimaryDbModels.Kitchens.findAll({});
+    return super.handleArrayObjectReturn({ dbResult, returnAsJson });
+  }
   async Create({ payload, returnAsJson = true }) {
     const dbResult = await super.PrimaryDbModels.Kitchens.create(payload);
     return super.handleSingObjectReturn({ dbResult, returnAsJson });
@@ -45,17 +49,25 @@ module.exports = class DbPrimaryKitchenRepository extends (
     pageNumber = 0,
     pageSize = 10,
     kitchenId,
+    includeFlavours = true,
     returnAsJson = true,
   }) {
     const options = {
+      attributes: { exclude: ["kitchenId"] },
       where: {
-        [Op.and]: [],
+        [Op.and]: [{ isEnabled: true }],
       },
       include: [],
       offset: pageNumber * pageSize,
       limit: pageSize,
       order: [["created_at", "DESC"]],
     };
+
+    if (includeFlavours) {
+      options.include.push({
+        model: super.PrimaryDbModels.Flavours,
+      });
+    }
 
     if (keyword) {
       options.where[Op.and].push({
@@ -154,6 +166,7 @@ module.exports = class DbPrimaryKitchenRepository extends (
       where: {
         [Op.and]: [{ orderDateTime: null }, { userId: null }],
       },
+      order: [["date", "ASC"]],
     };
     if (kitchenItemId) {
       options.where[Op.and].push({ kitchenItemId });
@@ -190,6 +203,32 @@ module.exports = class DbPrimaryKitchenRepository extends (
       },
     };
 
+    const dbResult = await super.PrimaryDbModels.KitchenItemFlavours.findAll(
+      options
+    );
+    return super.handleArrayObjectReturn({ dbResult, returnAsJson });
+  }
+
+  async FindItemsCountByKitchenId({ id }) {
+    const options = {
+      where: {
+        kitchenId: id,
+      },
+    };
+    return super.PrimaryDbModels.KitchenItems.count(options);
+  }
+
+  async FindItemFlavours({ kitchenItemId, returnAsJson }) {
+    const options = {
+      where: {
+        kitchenItemId,
+      },
+      include: [
+        {
+          model: super.PrimaryDbModels.Flavours,
+        },
+      ],
+    };
     const dbResult = await super.PrimaryDbModels.KitchenItemFlavours.findAll(
       options
     );

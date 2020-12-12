@@ -47,7 +47,7 @@ module.exports = class DbPrimaryOrderRepository extends (
       include: [
         {
           model: super.PrimaryDbModels.KitchenItems,
-          where: { kitchenId },
+          // where: { kitchenId },
         },
         {
           model: super.PrimaryDbModels.Users,

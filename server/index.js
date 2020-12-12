@@ -249,44 +249,26 @@ async function seedInitialBuyerData() {
 
   const email = config.db.primary.dbDefaultBuyerUser.email;
 
-  const kitchenMetadata = {
-    name: "Default Buyer Kitchen",
-    email,
-  };
-  const kitchenCreatedResult = await primaryDb.sequelizeInstance.models.Kitchens.findOrCreate(
-    {
-      where: {
-        email,
-      },
-      defaults: {
-        ...kitchenMetadata,
-      },
-    }
-  );
-
-  const kitchenRow = kitchenCreatedResult[0].toJSON();
-
-  const superUser = {
+  const buyerUser = {
     name: "Hussein Buyer",
     email,
     phoneNumber: "0176291725",
     addressLine1: "H7-3-2 Menara Polo",
     roleId: 3,
-    kitchenId: kitchenRow.id,
   };
 
   const userCreationResult = await primaryDb.sequelizeInstance.models.Users.findOrCreate(
     {
       where: {
-        email: superUser.email,
+        email: buyerUser.email,
       },
       defaults: {
-        ...superUser,
+        ...buyerUser,
       },
     }
   );
 
-  const dbSuperUser = {
+  const dbBuyerUser = {
     row: userCreationResult[0].toJSON(),
     created: userCreationResult[1],
   };
@@ -294,7 +276,7 @@ async function seedInitialBuyerData() {
   const hashedPassword = await Utilities.Bcrypt.hashPassword({
     password: config.db.primary.dbDefaultBuyerUser.password,
   });
-  const { id: userId } = dbSuperUser.row;
+  const { id: userId } = dbBuyerUser.row;
   const createPasswordEntryPromise = primaryDb.sequelizeInstance.models.UserCredentials.findOrCreate(
     {
       where: {

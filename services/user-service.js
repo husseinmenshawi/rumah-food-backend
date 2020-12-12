@@ -7,7 +7,9 @@ const constants = require("../constants");
 
 const BaseClass = require("./_base-service");
 
-module.exports = class UserService extends BaseClass {
+module.exports = class UserService extends (
+  BaseClass
+) {
   constructor() {
     super();
     super.ClassBinder.bind(this, UserService);
@@ -120,7 +122,8 @@ module.exports = class UserService extends BaseClass {
       accessToken,
       expirationDate,
       refreshToken,
-      kitchenId: currentUser.Kitchen.id,
+      kitchenId: currentUser.Kitchen ? currentUser.Kitchen.id : null,
+      userId: currentUser.id
     };
   }
 

@@ -158,8 +158,9 @@ const isUpdateItemObject = (input) => {
 const isCreateCapacityObject = (input) => {
   return Yup.object()
     .shape({
-      startDateTime: dateStringFormat(),
-      endDateTime: dateStringFormat(),
+      date: dateStringFormat(),
+      // startDateTime: dateStringFormat(),
+      // endDateTime: dateStringFormat(),
       kitchenId: requiredInteger(),
       kitchenItemId: requiredUUID(),
       amount: requiredInteger(),
@@ -174,7 +175,6 @@ const isCreateOrderObject = (input) => {
   return Yup.object()
     .shape({
       orderDateTime: dateStringFormat(),
-      endDateTime: dateStringFormat(),
       userId: requiredInteger(),
       kitchenItemId: requiredUUID(),
       amount: requiredInteger(),
