@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
       unique: true,
     },
     date: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
       allowNull: false,
     },
     // startDateTime: {
@@ -23,7 +23,7 @@ module.exports = (sequelize, Sequelize) => {
     //   allowNull: false,
     // },
     orderDateTime: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
       allowNull: true,
     },
   };

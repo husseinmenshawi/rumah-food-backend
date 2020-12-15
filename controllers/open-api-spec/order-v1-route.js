@@ -103,7 +103,7 @@ const paths = (tags = ["Order"]) => {
             minLength: 1,
             required: true,
             description: `Id of the order for retrieval.`,
-            type: "integer",
+            type: "string",
           },
         ],
         responses: {
@@ -137,7 +137,7 @@ const paths = (tags = ["Order"]) => {
             minLength: 1,
             required: true,
             description: `Id of the order for to be delivered.`,
-            type: "integer",
+            type: "string",
           },
         ],
         responses: {
@@ -171,7 +171,7 @@ const paths = (tags = ["Order"]) => {
             minLength: 1,
             required: true,
             description: `Id of the order for to be confirm.`,
-            type: "integer",
+            type: "string",
           },
         ],
         responses: {

@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
       unique: true,
     },
     orderDateTime: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
       allowNull: false,
     },
     amount: {
@@ -19,6 +19,10 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
     },
     comment: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    reviewComment: {
       type: Sequelize.STRING,
       allowNull: true,
     },

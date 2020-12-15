@@ -88,16 +88,7 @@ module.exports = class DbPrimaryOrderRepository extends (
     return super.handleSingObjectReturn({ dbResult, returnAsJson });
   }
 
-  async DeliverOrder({ id, updatePayload }) {
-    const query = {
-      where: {
-        id,
-      },
-    };
-    await super.PrimaryDbModels.Orders.update(updatePayload, query);
-  }
-
-  async ConfirmOrder({ id, updatePayload }) {
+  async Update({ id, updatePayload }) {
     const query = {
       where: {
         id,

@@ -7,12 +7,12 @@ const constants = require("../constants");
 
 const BaseClass = require("./_base-service");
 
-module.exports = class UserService extends (
+module.exports = class OrderService extends (
   BaseClass
 ) {
   constructor() {
     super();
-    super.ClassBinder.bind(this, UserService);
+    super.ClassBinder.bind(this, OrderService);
   }
 
   async Create({ payload }) {
@@ -41,7 +41,7 @@ module.exports = class UserService extends (
     }
 
     const availableCapacities = await super.KitchenRepo.FindAvailableCapacities(
-      { kitchenItemId }
+      { kitchenItemId, date: orderDateTime }
     );
 
     if (availableCapacities.length < amount) {
@@ -96,7 +96,7 @@ module.exports = class UserService extends (
     const updatePayload = {
       orderStatusId: 3,
     };
-    return await super.OrderRepo.DeliverOrder({ updatePayload, id });
+    return await super.OrderRepo.Update({ updatePayload, id });
   }
 
   async ConfirmOrder({ id, currentUser }) {
@@ -111,6 +111,6 @@ module.exports = class UserService extends (
     const updatePayload = {
       orderStatusId: 2,
     };
-    return await super.OrderRepo.ConfirmOrder({ updatePayload, id });
+    return await super.OrderRepo.Update({ updatePayload, id });
   }
 };

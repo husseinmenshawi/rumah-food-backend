@@ -260,14 +260,14 @@ const paths = (tags = ["Kitchen"]) => {
             description: `The kitchen id.`,
             type: "integer",
           },
-          // {
-          //   in: 'query',
-          //   name: 'showInactive',
-          //   minLength: 1,
-          //   required: false,
-          //   description: `Show Inactive items.`,
-          //   type: 'string',
-          // },
+          {
+            in: 'query',
+            name: 'excludeInactiveItems',
+            minLength: 1,
+            required: false,
+            description: `Exclude Inactive items.`,
+            type: 'boolean',
+          },
         ],
         responses: {
           200: {
@@ -537,18 +537,6 @@ const schemas = {
         required: true,
         example: "2020-10-28",
       },
-      // startDateTime: {
-      //   type: "string",
-      //   description: "Start date of capacity.",
-      //   required: true,
-      //   example: "2020-10-28",
-      // },
-      // endDateTime: {
-      //   type: "string",
-      //   description: "End date of capacity.",
-      //   required: true,
-      //   example: "2020-10-28",
-      // },
       kitchenId: {
         type: "integer",
         description: "kitchen id of the user",

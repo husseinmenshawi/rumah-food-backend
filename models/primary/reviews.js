@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
       unique: true,
     },
     stars: {
-      type: Sequelize.STRING,
+      type: Sequelize.INTEGER,
       allowNull: false,
     },
     comment: {
@@ -30,6 +30,12 @@ module.exports = (sequelize, Sequelize) => {
 
     models.Kitchens.hasMany(table);
     table.belongsTo(models.Kitchens, { foreignKey: "kitchenId" });
+
+    models.KitchenItems.hasMany(table);
+    table.belongsTo(models.KitchenItems, { foreignKey: "kitchenItemId" });
+
+    models.Orders.hasMany(table);
+    table.belongsTo(models.Orders, { foreignKey: "orderId" });
   };
 
   return table;

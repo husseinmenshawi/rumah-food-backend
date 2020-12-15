@@ -1,4 +1,5 @@
 "use strict";
+const moment = require("moment");
 
 const BaseClass = require("./_base-service");
 
@@ -83,7 +84,13 @@ module.exports = class KitchenService extends (
       throw super.ErrorUtil.FindItemsParamsInvalidError();
     }
 
-    const { keyword, pageNumber, pageSize, kitchenId } = params;
+    const {
+      keyword,
+      pageNumber,
+      pageSize,
+      kitchenId,
+      excludeInactiveItems,
+    } = params;
     const kitchenExist = await super.KitchenRepo.FindKitchenById({
       id: kitchenId,
     });
@@ -96,6 +103,7 @@ module.exports = class KitchenService extends (
       pageNumber,
       pageSize,
       kitchenId,
+      excludeInactiveItems,
     });
   }
 
@@ -121,7 +129,12 @@ module.exports = class KitchenService extends (
     if (!itemExist) {
       throw super.ErrorUtil.ItemNotFoundError();
     }
-
+    const capacities = await super.KitchenRepo.FindCapacities({
+      kitchenId: itemExist.kitchenId,
+    });
+    if (capacities.length > 0) {
+      throw super.ErrorUtil.UnableToDeletItemDueToCapacities();
+    }
     await super.KitchenRepo.DeleteItemFlavoursByItemId({ id });
     await super.KitchenRepo.DeleteItemById({ id });
     return;
@@ -226,13 +239,14 @@ module.exports = class KitchenService extends (
     if (!itemExist) {
       throw super.ErrorUtil.ItemNotFoundError();
     }
-
+    const today = moment().format("YYYY-MM-DD");
     return await super.KitchenRepo.FindAvailableCapacities({
       kitchenItemId,
+      today,
     });
   }
 
-  async FindItemFlavours({kitchenItemId}){
+  async FindItemFlavours({ kitchenItemId }) {
     if (!this.ValidationUtil.isUUID(kitchenItemId)) {
       throw super.ErrorUtil.ItemIdInvalidError();
     }

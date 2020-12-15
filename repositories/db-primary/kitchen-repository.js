@@ -50,18 +50,23 @@ module.exports = class DbPrimaryKitchenRepository extends (
     pageSize = 10,
     kitchenId,
     includeFlavours = true,
+    excludeInactiveItems = false,
     returnAsJson = true,
   }) {
     const options = {
       attributes: { exclude: ["kitchenId"] },
       where: {
-        [Op.and]: [{ isEnabled: true }],
+        [Op.and]: [],
       },
       include: [],
       offset: pageNumber * pageSize,
       limit: pageSize,
-      order: [["created_at", "DESC"]],
+      order: [["is_enabled", "DESC"]],
     };
+
+    if (excludeInactiveItems) {
+      options.where[Op.and].push({ isEnabled: true });
+    }
 
     if (includeFlavours) {
       options.include.push({
@@ -143,7 +148,7 @@ module.exports = class DbPrimaryKitchenRepository extends (
       include: [],
       // offset: pageNumber * pageSize,
       // limit: pageSize,
-      order: [["created_at", "DESC"]],
+      order: [["date", "DESC"]],
     };
 
     if (kitchenId) {
@@ -161,7 +166,12 @@ module.exports = class DbPrimaryKitchenRepository extends (
     return super.handleArrayObjectReturn({ dbResult, returnAsJson });
   }
 
-  async FindAvailableCapacities({ kitchenItemId, returnAsJson = true }) {
+  async FindAvailableCapacities({
+    kitchenItemId,
+    today,
+    date,
+    returnAsJson = true,
+  }) {
     const options = {
       where: {
         [Op.and]: [{ orderDateTime: null }, { userId: null }],
@@ -170,6 +180,14 @@ module.exports = class DbPrimaryKitchenRepository extends (
     };
     if (kitchenItemId) {
       options.where[Op.and].push({ kitchenItemId });
+    }
+
+    if (today) {
+      options.where[Op.and].push({ date: { [Op.gt]: today } });
+    }
+
+    if (date) {
+      options.where[Op.and].push({ date });
     }
 
     const dbResult = await super.PrimaryDbModels.KitchenItemCapacities.findAll(

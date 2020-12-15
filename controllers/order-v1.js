@@ -78,6 +78,7 @@ router.get(
   middlewares.jtwTokenValidator.validate,
   middlewares.authorization.authorizeRole([
     constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+    constants.USER_ROLES.ROLE_ENUMS.BUYER.id,
   ]),
   async (req, res, next) => {
     const { id } = req.params;

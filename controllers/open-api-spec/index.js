@@ -5,6 +5,7 @@ const gatekeeperV1Route = require("./gatekeeper-v1-route");
 const userV1Route = require("./user-v1-route");
 const kitchenV1Route = require("./kitchen-v1-route");
 const orderV1Route = require("./order-v1-route");
+const reviewV1Route = require("./review-v1-route");
 module.exports = {
   openapi: "3.0.1",
   info: {
@@ -24,6 +25,7 @@ module.exports = {
     { name: "User" },
     { name: "Kitchen" },
     { name: "Order" },
+    { name: "Review" },
   ],
   paths: {
     ...homeRoute.paths(),
@@ -31,6 +33,7 @@ module.exports = {
     ...userV1Route.paths(),
     ...kitchenV1Route.paths(),
     ...orderV1Route.paths(),
+    ...reviewV1Route.paths(),
   },
   components: {
     securitySchemes: {
@@ -46,6 +49,7 @@ module.exports = {
       ...userV1Route.schemas,
       ...kitchenV1Route.schemas,
       ...orderV1Route.schemas,
+      ...reviewV1Route.schemas,
     },
   },
 };

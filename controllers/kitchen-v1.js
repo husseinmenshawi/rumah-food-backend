@@ -167,11 +167,12 @@ router.patch(
 
 router.get(
   "/flavours",
-  // middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
-  // middlewares.jtwTokenValidator.validate,
-  // middlewares.authorization.authorizeRole([
-  //   constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
-  // ]),
+  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  middlewares.jtwTokenValidator.validate,
+  middlewares.authorization.authorizeRole([
+    constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+    constants.USER_ROLES.ROLE_ENUMS.BUYER.id,
+  ]),
   async (req, res, next) => {
     try {
       const dbResult = await new Services.Kitchen().FindFlavours();

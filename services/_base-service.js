@@ -42,4 +42,8 @@ module.exports = class BaseService {
   get OrderRepo() {
     return new this.Repositories.Db.Primary.Order();
   }
+
+  get ReviewRepo() {
+    return new this.Repositories.Db.Primary.Review();
+  }
 };

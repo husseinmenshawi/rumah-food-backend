@@ -159,13 +159,9 @@ const isCreateCapacityObject = (input) => {
   return Yup.object()
     .shape({
       date: dateStringFormat(),
-      // startDateTime: dateStringFormat(),
-      // endDateTime: dateStringFormat(),
       kitchenId: requiredInteger(),
       kitchenItemId: requiredUUID(),
       amount: requiredInteger(),
-      // orderDateTime: requiredDate(),
-      // userId: requiredInteger(),
     })
     .required()
     .isValidSync(input);
@@ -179,6 +175,30 @@ const isCreateOrderObject = (input) => {
       kitchenItemId: requiredUUID(),
       amount: requiredInteger(),
       comment: optionalString(),
+    })
+    .required()
+    .isValidSync(input);
+};
+
+const isCreateReviewObject = (input) => {
+  return Yup.object()
+    .shape({
+      stars: requiredInteger(),
+      kitchenId: requiredInteger(),
+      kitchenItemId: requiredUUID(),
+      orderId: requiredUUID(),
+      comment: requiredString(),
+    })
+    .required()
+    .isValidSync(input);
+};
+
+const isFindReviewsObject = (input) => {
+  return Yup.object()
+    .shape({
+      orderId: requiredUUID(),
+      kitchenItemId: optionalString(),
+      kitchenId: optionalInteger(),
     })
     .required()
     .isValidSync(input);
@@ -296,4 +316,6 @@ module.exports = {
   isCreateCapacityObject,
   isFindCapacitiesObject,
   isCreateOrderObject,
+  isCreateReviewObject,
+  isFindReviewsObject
 };

@@ -239,6 +239,20 @@ const KitchenIdInvalidError = () => {
   });
 };
 
+const UnableToDeletItemDueToCapacities = () => {
+  return GenerateHttpError({
+    message: "Capacities are tied with this item",
+    httpErrorCode: 400,
+  });
+};
+
+const ReviewMetadataInvalidError = () => {
+  return GenerateHttpError({
+    message: "Review metadata is invalid",
+    httpErrorCode: 400,
+  });
+};
+
 module.exports = {
   GenerateHttpError,
   ConvertErrorToHttpError,
@@ -272,5 +286,7 @@ module.exports = {
   InsufficientCapacitiesError,
   OrderIdInvalidError,
   FlavourNotAvailableError,
-  KitchenIdInvalidError
+  KitchenIdInvalidError,
+  UnableToDeletItemDueToCapacities,
+  ReviewMetadataInvalidError
 };
