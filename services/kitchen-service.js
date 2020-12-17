@@ -14,6 +14,23 @@ module.exports = class KitchenService extends (
 
   async FindAll({}) {
     const kitchens = await super.KitchenRepo.FindAll({});
+
+    for (let i = 0; i < kitchens.length; i++) {
+      const kitchen = kitchens[i];
+      if (kitchen.Reviews.length == 0) {
+        kitchen.reviewAverage = 0;
+        kitchen.reviewsLength = 0;
+      } else {
+        let total = 0;
+        const reviewsLength = kitchen.Reviews.length;
+        kitchen.Reviews.map((x) => {
+          total = total + x.stars;
+        });
+        const average = Number((total / reviewsLength).toFixed(2));
+        kitchen.reviewAverage = average;
+        kitchen.reviewsLength = reviewsLength;
+      }
+    }
     // TODO: double check this with more load
     await Promise.all(
       kitchens.map(async (x) => {
@@ -98,13 +115,32 @@ module.exports = class KitchenService extends (
       throw super.ErrorUtil.KitchenDoesNotExistError();
     }
 
-    return await super.KitchenRepo.FindItems({
+    const kitchenItems = await super.KitchenRepo.FindItems({
       keyword,
       pageNumber,
       pageSize,
       kitchenId,
       excludeInactiveItems,
     });
+
+    for (let i = 0; i < kitchenItems.length; i++) {
+      const kitchenItem = kitchenItems[i];
+      if (kitchenItem.Reviews.length == 0) {
+        kitchenItem.reviewAverage = 0;
+        kitchenItem.reviewsLength = 0;
+      } else {
+        let total = 0;
+        const reviewsLength = kitchenItem.Reviews.length;
+        kitchenItem.Reviews.map((x) => {
+          total = total + x.stars;
+        });
+        const average = Number((total / reviewsLength).toFixed(2));
+        kitchenItem.reviewAverage = average;
+        kitchenItem.reviewsLength = reviewsLength;
+      }
+    }
+
+    return kitchenItems;
   }
 
   async FindItemById({ id }) {

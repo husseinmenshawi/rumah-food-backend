@@ -37,6 +37,46 @@ const paths = (tags = ["Review"]) => {
           },
         },
       },
+      get: {
+        tags,
+        description: "Endpoint to fetch review average",
+        parameters: [
+          {
+            name: "kitchenId",
+            in: "query",
+            minLength: 1,
+            required: false,
+            description: `Kitchen Id.`,
+            type: "integer",
+          },
+          {
+            name: "kitchenItemId",
+            in: "query",
+            minLength: 1,
+            required: false,
+            description: `Kitchen Item Id.`,
+            type: "string",
+          },
+        ],
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        operationId: "fetchReviewAverage",
+        responses: {
+          200: {
+            description: "Successful review average fetch.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                },
+              },
+            },
+          },
+        },
+      },
     },
     [`${CONSTANTS.API.VERSIONS["V1.0"].BASE_PATH}/review/{id}`]: {
       get: {

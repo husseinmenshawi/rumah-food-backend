@@ -31,27 +31,27 @@ router.post(
   }
 );
 
-router.get(
-  "/",
-  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
-  middlewares.jtwTokenValidator.validate,
-  middlewares.authorization.authorizeRole([
-    constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
-    constants.USER_ROLES.ROLE_ENUMS.BUYER.id,
-  ]),
-  async (req, res, next) => {
-    const { params } = req;
-    try {
-      const createdEntry = await new Services.Review().FindReviewByParams({
-        params,
-      });
-      res.status(200);
-      res.json(createdEntry);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+// router.get(
+//   "/",
+//   middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+//   middlewares.jtwTokenValidator.validate,
+//   middlewares.authorization.authorizeRole([
+//     constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+//     constants.USER_ROLES.ROLE_ENUMS.BUYER.id,
+//   ]),
+//   async (req, res, next) => {
+//     const { query } = req;
+//     try {
+//       const dbResult = await new Services.Review().FindReviewByParams({
+//         params: query,
+//       });
+//       res.status(200);
+//       res.json(dbResult);
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
 
 router.get(
   "/:id",
@@ -64,11 +64,32 @@ router.get(
   async (req, res, next) => {
     const { id } = req.params;
     try {
-      const createdEntry = await new Services.Review().FindReviewByOrderId({
+      const dbResult = await new Services.Review().FindReviewByOrderId({
         id,
       });
       res.status(200);
-      res.json(createdEntry);
+      res.json(dbResult);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/",
+  middlewares.passport.jwtToken.authenticate("jwt", { session: false }),
+  middlewares.jtwTokenValidator.validate,
+  middlewares.authorization.authorizeRole([
+    constants.USER_ROLES.ROLE_ENUMS.SELLER.id,
+    constants.USER_ROLES.ROLE_ENUMS.BUYER.id,
+  ]),
+  async (req, res, next) => {
+    try {
+      const dbResult = await new Services.Review().GetRatingAverage({
+        params: req.query,
+      });
+      res.status(200);
+      res.json(dbResult);
     } catch (error) {
       next(error);
     }

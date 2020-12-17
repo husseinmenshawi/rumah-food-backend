@@ -14,6 +14,7 @@ module.exports = class DbPrimaryReviewRepository extends (
   async FindAll({ params, returnAsJson = true }) {
     const { orderId, kitchenItemId, kitchenId } = params;
     const options = {
+      attributes: ["stars", "kitchenId", "kitchenItemId"],
       where: { [Op.and]: [] },
     };
 

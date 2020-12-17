@@ -7,7 +7,14 @@ module.exports = class DbPrimaryKitchenRepository extends (
   BaseClass
 ) {
   async FindAll({ returnAsJson = true }) {
-    const dbResult = await super.PrimaryDbModels.Kitchens.findAll({});
+    const options = {
+      include: [
+        {
+          model: super.PrimaryDbModels.Reviews,
+        },
+      ],
+    };
+    const dbResult = await super.PrimaryDbModels.Kitchens.findAll(options);
     return super.handleArrayObjectReturn({ dbResult, returnAsJson });
   }
   async Create({ payload, returnAsJson = true }) {
@@ -51,6 +58,7 @@ module.exports = class DbPrimaryKitchenRepository extends (
     kitchenId,
     includeFlavours = true,
     excludeInactiveItems = false,
+    includeReviews = true,
     returnAsJson = true,
   }) {
     const options = {
@@ -82,6 +90,12 @@ module.exports = class DbPrimaryKitchenRepository extends (
 
     if (kitchenId) {
       options.where[Op.and].push({ kitchenId });
+    }
+
+    if (includeReviews) {
+      options.include.push({
+        model: super.PrimaryDbModels.Reviews,
+      });
     }
 
     const dbResult = await super.PrimaryDbModels.KitchenItems.findAll(options);

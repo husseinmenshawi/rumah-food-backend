@@ -40,7 +40,7 @@ module.exports = class ReviewService extends (
       kitchenItemId,
       comment,
       userId,
-      orderId
+      orderId,
     };
 
     await super.OrderRepo.Update({
@@ -50,13 +50,13 @@ module.exports = class ReviewService extends (
     return await super.ReviewRepo.Create({ payload: createReviewPayload });
   }
 
-  async FindReviewByParams({ params }) {
-    if (!this.ValidationUtil.isFindReviewsObject(params)) {
-      throw this.ErrorUtil.ReviewMetadataInvalidError();
-    }
+  // async FindReviewByParams({ params }) {
+  //   if (!this.ValidationUtil.isFindReviewsObject(params)) {
+  //     throw this.ErrorUtil.ReviewMetadataInvalidError();
+  //   }
 
-    return await super.ReviewRepo.FindAll({ params });
-  }
+  //   return await super.ReviewRepo.FindAll({ params });
+  // }
 
   async FindReviewByOrderId({ id }) {
     if (!this.ValidationUtil.isUUID(id)) {
@@ -64,5 +64,40 @@ module.exports = class ReviewService extends (
     }
 
     return await super.ReviewRepo.FindOneByOrderId({ orderId: id });
+  }
+
+  async GetRatingAverage({ params }) {
+    const { kitchenItemId, kitchenId } = params;
+
+    if (kitchenId) {
+      if (!this.ValidationUtil.isInteger(kitchenId)) {
+        throw this.ErrorUtil.KitchenIdInvalidError();
+      }
+    }
+
+    if (kitchenItemId) {
+      if (!this.ValidationUtil.isUUID(kitchenItemId)) {
+        throw this.ErrorUtil.ItemIdInvalidError();
+      }
+    }
+
+    if (!kitchenId && !kitchenItemId) {
+      return 0;
+    }
+
+    const reviews = await super.ReviewRepo.FindAll({ params });
+    let total = 0;
+    const reviewsLength = reviews.length;
+    reviews.map((x) => {
+      total = total + x.stars;
+    });
+
+    const average = Number((total / reviewsLength).toFixed(2));
+    const returnObj = {
+      average,
+      reviewsLength,
+    };
+
+    return returnObj;
   }
 };
